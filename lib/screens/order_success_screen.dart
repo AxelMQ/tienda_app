@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
+import 'order_tracking_screen.dart';
 
 // Pantalla de confirmación de pedido exitoso
 // Se muestra después de completar el pago (QR, Tarjeta o Efectivo)
@@ -210,8 +211,16 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                     height: 56,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Regresa al home y limpia el stack de navegación
-                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        // Navega a seguimiento de pedido
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => OrderTrackingScreen(
+                              orderId: '#12345',
+                              deliveryPerson: 'Juan Perez',
+                              estimatedTime: '14:00 - 14:35',
+                            ),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryRed,

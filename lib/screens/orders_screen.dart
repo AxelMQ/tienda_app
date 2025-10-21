@@ -8,6 +8,7 @@ import '../widgets/bottom_navigation.dart';
 import '../widgets/recent_order_card.dart';
 import 'offers_screen.dart';
 import 'profile_screen.dart';
+import 'order_tracking_screen.dart';
 
 // Pantalla de pedidos y historial de compras
 // Muestra todos los pedidos organizados por estado
@@ -300,7 +301,22 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
                 originalPrice: order['originalPrice'],
                 discount: order['discount'],
                 imagePath: order['image'],
-                onTap: () => _showSnackBar('Pedido: ${order['name']}'),
+                onTap: () {
+                  // Si el pedido está en camino, navega a seguimiento
+                  if (order['status'] == 'En camino') {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => OrderTrackingScreen(
+                          orderId: order['id'],
+                          deliveryPerson: 'Juan Perez',
+                          estimatedTime: '14:00 - 14:35',
+                        ),
+                      ),
+                    );
+                  } else {
+                    _showSnackBar('Pedido: ${order['name']}');
+                  }
+                },
                 onOrderAgain: () => _addToCart(order['name']),
                 buttonOnRight: true, // Botón a la derecha
               ),
