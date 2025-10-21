@@ -114,12 +114,66 @@ Una aplicación móvil desarrollada en Flutter para una tienda de comercios masi
 - **Total animado** con AnimatedSwitcher (300ms)
 - **Botón PAGAR prominente** rojo 56px de alto con shadow
 - **Loading indicator** circular blanco al procesar pago
-- **Diálogo de éxito** no dismissible con ícono verde grande
-- **Mensaje de confirmación** claro y profesional
-- **Botón "Volver al inicio"** que limpia todo el stack de navegación
-- **Footer fijo elevado** con sombra superior
+- **Navegación a pantallas de pago** QR, Tarjeta o confirmación directa en Efectivo
+- **Footer fijo elevado** con bordes redondeados (20px) y sombra superior
 - **Animaciones de entrada escalonadas** (0ms, 100ms, 200ms, 300ms)
 - **8 tipos de animaciones** integradas (staggered, fade, slide, scale, container)
+
+### 📱 Pantalla de Pago QR
+- **AppBar con bordes redondeados** (20px) para continuidad visual
+- **Código QR grande** centralizado con imagen placeholder (en producción sería generado)
+- **Total a pagar** prominente en rojo con tamaño 32px
+- **Fecha de vencimiento** del QR (24 horas) con formato DD-MM-YYYY
+- **Botón "Guardar en Galería"** con ícono de descarga y feedback visual
+- **SnackBar verde** confirmando guardado exitoso
+- **Instrucciones paso a paso** numeradas y claras para el usuario
+- **Botón "Ya Pagué"** rojo prominente (56px) con loading state
+- **Loading circular** blanco al verificar pago (2 segundos simulados)
+- **Navegación a pantalla de éxito** con diferenciación por método
+- **7 animaciones escalonadas** con delays de 0ms a 600ms
+- **Staggered entry** usando FadeTransition + SlideTransition
+
+### 💳 Pantalla de Pago con Tarjeta
+- **AppBar con bordes redondeados** (20px) para continuidad visual
+- **Ícono de tarjeta** grande centralizado con color azul
+- **4 campos de entrada** con validación en tiempo real
+- **Campo "Titular"** con autocompletado de mayúsculas
+- **Campo "Número"** con formato automático (XXXX XXXX XXXX XXXX)
+- **Campo "MM/AA"** con validación de fecha y formato XX/XX
+- **Campo "CVV"** con ocultamiento de dígitos y máximo 3-4 caracteres
+- **Validaciones visuales** con borde rojo y mensaje de error claro
+- **Autocompletado inteligente** que mueve el foco al siguiente campo
+- **Total a pagar** visible y destacado en todo momento
+- **Mensaje de seguridad SSL** con ícono de candado para confianza
+- **Botón "Procesar Pago"** rojo prominente (56px) con loading
+- **Loading circular** blanco al procesar (2 segundos simulados)
+- **Navegación a pantalla de éxito** con diferenciación por método
+- **8 animaciones escalonadas** con delays de 0ms a 700ms
+- **Focus automático** en primer campo al entrar
+
+### ✅ Pantalla de Confirmación de Pedido
+- **Diferenciación visual por método** de pago usado
+- **Ícono verde** (pago procesado) para QR y Tarjeta con rebote elástico
+- **Ícono naranja** (pedido confirmado) para Efectivo con rebote elástico
+- **Título dinámico** "Pago Realizado" vs "Pedido Confirmado"
+- **Mensaje principal** claro y prominente (24px bold)
+- **Submensaje contextual** según método de pago (16px)
+- **Card de información** con colores semánticos (verde/naranja)
+- **Para pagos procesados** muestra check, tiempo estimado (25-40 min) y total pagado
+- **Para efectivo** muestra info, tiempo estimado y recordatorio del monto a pagar
+- **Centrado visual perfecto** usando Spacer con golden ratio (2:3)
+- **SafeArea** que respeta notch, bordes redondeados y bottom bar
+- **WillPopScope** previene retroceso accidental del usuario
+- **Botón "Ver mi pedido"** prominente (56px) que limpia stack de navegación
+- **5 capas de animaciones** profesionales escalonadas
+- **ScaleTransition** con Curves.elasticOut en ícono (1000ms)
+- **FadeTransition** en título (0ms)
+- **SlideTransition + FadeTransition** en subtítulo (300ms delay)
+- **SlideTransition + FadeTransition** en card de info (500ms delay)
+- **FadeTransition** en botón (700ms delay)
+- **Timing optimizado** para ritmo natural de lectura
+- **AppBar sin botón back** para evitar confusión
+- **Bordes redondeados** (20px) en AppBar para continuidad
 
 ### 🎨 Diseño y UX
 - **Paleta de colores**: Rojo primario, blanco, negro y amarillo dorado
@@ -233,6 +287,9 @@ lib/
 │   ├── product_detail_screen.dart # Detalle de producto con Hero animation y notas
 │   ├── cart_screen.dart          # Carrito con swipe eliminar y animaciones avanzadas
 │   ├── checkout_screen.dart      # Checkout con métodos de pago y confirmación
+│   ├── payment_qr_screen.dart    # Pantalla de pago con código QR
+│   ├── payment_card_screen.dart  # Pantalla de pago con tarjeta de crédito/débito
+│   ├── order_success_screen.dart # Confirmación exitosa con diferenciación por método
 │   ├── offers_screen.dart        # Pantalla de ofertas con grid 2x2 y carruseles
 │   ├── orders_screen.dart        # Pantalla de pedidos con tabs y animaciones
 │   └── profile_screen.dart       # Pantalla de perfil de usuario
@@ -426,6 +483,19 @@ Dark Gray: #4A5568
 - **Total con AnimatedSwitcher** ScaleTransition (300ms)
 - **Botón PAGAR** 56px alto, rojo prominente, shadow elevation
 - **Loading state** circular indicator blanco al procesar
+- **Navegación inteligente** a PaymentQR, PaymentCard o OrderSuccess según método
+
+#### Flujo Completo de Pago
+- **PaymentQRScreen** con QR generado, fecha de vencimiento y botón guardar
+- **PaymentCardScreen** con validación en tiempo real y formateo automático
+- **OrderSuccessScreen** con diferenciación por método de pago
+- **Navegación fluida** entre checkout → pago → confirmación
+- **Stack limpiado** con popUntil al finalizar
+- **WillPopScope** previene retroceso accidental en confirmación
+- **Colores semánticos** verde (pagado), naranja (pendiente)
+- **Mensajes contextuales** "Pago Realizado" vs "Pedido Confirmado"
+- **Timing perfecto** animaciones escalonadas (0ms → 700ms)
+- **Golden ratio** Spacer 2:3 para centrado visual óptimo
 - **Diálogo no dismissible** barrierDismissible: false
 - **Confirmación visual** ícono verde 80x80px con fondo circular
 - **Navegación al home** popUntil limpia todo el stack
@@ -484,6 +554,20 @@ Dark Gray: #4A5568
 - **Sombras Dinámicas**: Profundidad sin sobrecargar
 - **Press Feedback Universal**: Todas las interacciones tienen respuesta visual
 - **Scroll Dismissible**: Teclado se cierra al scrollear
+- **Métodos de Pago Visuales**: Iconos distintivos con colores semánticos (gris/azul/verde)
+- **Selección Clara**: Borde rojo 2px, check circular, fondo sutil en activo
+- **Datos Editables Explícitos**: Botones "Cambiar" y "Editar" visibles siempre
+- **Resumen Visual**: Card con fondo gris claro y desglose completo
+- **Loading State Claro**: Circular indicator blanco en botón al procesar
+- **Confirmación No Dismissible**: Usuario no puede cerrar accidentalmente
+- **Navegación Inteligente**: Flujo automático checkout → pago → confirmación → home
+- **Diferenciación Contextual**: Verde (pagado) vs Naranja (pendiente)
+- **Centrado Visual Perfecto**: Golden ratio 2:3 para percepción óptima
+- **Validación en Tiempo Real**: Campos de tarjeta con feedback inmediato
+- **Formateo Automático**: Número de tarjeta, fecha MM/AA con máscaras
+- **Seguridad Visible**: Ícono SSL y mensaje de protección
+- **Prevención de Errores**: WillPopScope en confirmación final
+- **Stack Limpio**: popUntil elimina todas las pantallas de pago al finalizar
 - **Pull-to-Refresh**: Actualización manual con feedback
 - **Estados Vacíos**: Mensajes contextuales cuando no hay resultados
 - **SnackBars Informativos**: Feedback claro con iconos y colores semánticos
