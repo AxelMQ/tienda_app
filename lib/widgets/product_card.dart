@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
 
-/// Tarjeta de producto para mostrar información de productos
-class ProductCard extends StatelessWidget {
+// Tarjeta de producto con diseño minimalista
+// Muestra imagen, nombre, precio, descuento y botón opcional
+class ProductCard extends StatefulWidget {
   final String name;
   final double price;
   final double? originalPrice;
   final int? discount;
-  final String? imageUrl;
+  final String? imagePath;  // Ruta de asset local (no URL de internet)
   final VoidCallback? onTap;
   final VoidCallback? onOrderAgain;
   final bool showOrderAgainButton;
@@ -19,148 +20,166 @@ class ProductCard extends StatelessWidget {
     required this.price,
     this.originalPrice,
     this.discount,
-    this.imageUrl,
+    this.imagePath,
     this.onTap,
     this.onOrderAgain,
     this.showOrderAgainButton = false,
   });
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 160,
-        height: showOrderAgainButton ? 220 : 180,
-        margin: const EdgeInsets.only(right: AppConstants.smallPadding),
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppConstants.defaultRadius),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.cardShadow,
-              offset: const Offset(0, 2),
-              blurRadius: 6,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Imagen del producto
-            Container(
-              height: 100,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.lightGray,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(AppConstants.defaultRadius),
-                  topRight: Radius.circular(AppConstants.defaultRadius),
-                ),
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        widget.onTap?.call();
+      },
+      onTapCancel: () => setState(() => _isPressed = false),
+      child: AnimatedScale(
+        scale: _isPressed ? 0.95 : 1.0,  // Animación sutil al tocar
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOutBack,
+        child: Container(
+          width: 170,  // Ligeramente más ancho para mejor visualización
+          height: widget.showOrderAgainButton ? 240 : 200,
+          margin: const EdgeInsets.only(right: 12),
+          decoration: BoxDecoration(
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(16),  // Más redondeado
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.cardShadow.withOpacity(0.06),  // Sombra sutil
+                offset: const Offset(0, 2),
+                blurRadius: 10,
+                spreadRadius: 0,
               ),
-              child: imageUrl != null
-                  ? ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(AppConstants.defaultRadius),
-                        topRight: Radius.circular(AppConstants.defaultRadius),
-                      ),
-                      child: Image.network(
-                        imageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
-                      ),
-                    )
-                  : _buildPlaceholder(),
-            ),
-            
-            // Información del producto
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(AppConstants.smallPadding),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Imagen del producto (ahora con Image.asset para assets locales)
+              Container(
+                height: 110,  // Más alta para mejor visualización
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundWhite,  // Fondo blanco como en Figma
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
+                child: widget.imagePath != null
+                    ? ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                        child: Image.asset(  // Cambiado de Image.network a Image.asset
+                          widget.imagePath!,
+                          fit: BoxFit.contain,  // contain para ver el producto completo
+                          errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+                        ),
+                      )
+                    : _buildPlaceholder(),
+              ),
+              
+              // Información del producto
+              Expanded(
+                child: Padding(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Nombre del producto
                     Text(
-                      name,
+                      widget.name,
                       style: const TextStyle(
                         color: AppColors.textBlack,
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w600,
+                        height: 1.3,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     
-                    // Precio
+                    // Precio actual (destacado en rojo)
                     Text(
-                      'Bs. ${price.toStringAsFixed(2)}',
+                      'Bs. ${widget.price.toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: AppColors.primaryRed,
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
                       ),
                     ),
                     
-                    // Precio original y descuento
-                    if (originalPrice != null && originalPrice! > price)
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              'Bs. ${originalPrice!.toStringAsFixed(2)}',
+                    // Precio original y descuento (en la misma línea)
+                    if (widget.originalPrice != null && widget.originalPrice! > widget.price)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Row(
+                          children: [
+                            // Precio tachado
+                            Text(
+                              'Bs. ${widget.originalPrice!.toStringAsFixed(2)}',
                               style: const TextStyle(
                                 color: AppColors.textLightGray,
-                                fontSize: 12,
+                                fontSize: 11,
                                 decoration: TextDecoration.lineThrough,
+                                height: 1.2,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          if (discount != null) ...[
-                            const SizedBox(width: 4),
-                            Flexible(
-                              child: Container(
+                            if (widget.discount != null) ...[
+                              const SizedBox(width: 6),
+                              // Badge de descuento más visible
+                              Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                  vertical: 2,
+                                  horizontal: 6,
+                                  vertical: 3,
                                 ),
                                 decoration: BoxDecoration(
                                   color: AppColors.accentYellow,
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
-                                  '${discount}% ${AppConstants.discountText}',
+                                  '${widget.discount}% ${AppConstants.discountText}',
                                   style: const TextStyle(
                                     color: AppColors.textBlack,
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     
                     const Spacer(),
                     
-                    // Botón de "Volver a Pedir"
-                    if (showOrderAgainButton)
+                    // Botón "Volver a Pedir" más atractivo
+                    if (widget.showOrderAgainButton)
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: onOrderAgain,
+                          onPressed: widget.onOrderAgain,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryRed,
                             foregroundColor: AppColors.backgroundWhite,
-                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppConstants.smallRadius),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             elevation: 0,
                           ),
@@ -168,7 +187,8 @@ class ProductCard extends StatelessWidget {
                             AppConstants.orderAgainText,
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.3,
                             ),
                           ),
                         ),
@@ -180,21 +200,24 @@ class ProductCard extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
 
+  // Icono de placeholder si no hay imagen
   Widget _buildPlaceholder() {
     return const Center(
       child: Icon(
-        Icons.image,
+        Icons.shopping_bag_outlined,
         color: AppColors.textLightGray,
-        size: 40,
+        size: 50,
       ),
     );
   }
 }
 
-/// Lista horizontal de productos
+// Lista horizontal de productos que se puede deslizar
+// Muestra el título y las tarjetas en scroll horizontal
 class ProductsList extends StatelessWidget {
   final String title;
   final List<Map<String, dynamic>> products;
@@ -228,18 +251,21 @@ class ProductsList extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.textBlack,
+              letterSpacing: 0.3,
             ),
           ),
         ),
         
-        // Lista horizontal de productos
+        // Lista horizontal de productos que se desliza suavemente
         SizedBox(
-          height: showOrderAgainButton ? 240 : 200,
+          height: showOrderAgainButton ? 260 : 220,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(
               horizontal: AppConstants.defaultPadding,
             ),
+            // Para scroll suave en dispositivos
+            physics: const BouncingScrollPhysics(),
             itemCount: products.length,
             itemBuilder: (context, index) {
               final product = products[index];
@@ -248,7 +274,7 @@ class ProductsList extends StatelessWidget {
                 price: product['price'],
                 originalPrice: product['originalPrice'],
                 discount: product['discount'],
-                imageUrl: product['image'],
+                imagePath: product['image'],  // Cambiado de imageUrl a imagePath
                 showOrderAgainButton: showOrderAgainButton,
                 onTap: () => onProductTap?.call(product['name']),
                 onOrderAgain: () => onOrderAgain?.call(product['name']),

@@ -118,43 +118,43 @@ class _HomeScreenState extends State<HomeScreen> {
   // Datos de ejemplo para pedidos recientes
   final List<Map<String, dynamic>> _recentOrders = [
     {
-      'name': 'CocaCola + Vaso',
+      'name': 'Nescafe Clasico',
       'price': 30.0,
       'originalPrice': 35.0,
       'discount': 10,
-      'image': 'assets/images/coca_cola.png',
+      'image': 'assets/images/nescafe_clasico.webp',  // Corregido nombre de archivo
     },
     {
-      'name': 'Pepsi 250ml',
+      'name': 'Pepsi 1L',
       'price': 20.0,
       'originalPrice': 25.0,
       'discount': 20,
-      'image': 'assets/images/pepsi.png',
+      'image': 'assets/images/pepsi_1L.webp',  // Corregido nombre y extensión
     },
   ];
 
   // Datos de ejemplo para sugerencias
   final List<Map<String, dynamic>> _suggestions = [
     {
-      'name': 'Pepsi 250ml',
+      'name': 'Pepsi 3L',
       'price': 20.0,
       'originalPrice': 25.0,
       'discount': 20,
-      'image': 'assets/images/pepsi.png',
+      'image': 'assets/images/pepsi_3L.webp',  // Corregido nombre y extensión
     },
     {
-      'name': 'Nescafé Clásico',
+      'name': 'Chocolate Garoto 250gr',
       'price': 45.0,
       'originalPrice': 50.0,
       'discount': 10,
-      'image': 'assets/images/nescafe.png',
+      'image': 'assets/images/garoto.jpg',  // Usando imagen existente
     },
     {
-      'name': 'Leche Entera 1L',
+      'name': 'Mix Chocolates',
       'price': 8.50,
       'originalPrice': 10.00,
       'discount': 15,
-      'image': 'assets/images/leche.png',
+      'image': 'assets/images/pic_chocolates.jpg',  // Usando imagen existente
     },
   ];
 
@@ -166,17 +166,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // Cuando tocas en cualquier parte de la pantalla, el teclado se cierra
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundWhite,
-        appBar: CustomAppBar(
-          cartItemCount: _cartItemCount,
-        ),
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: AppColors.backgroundWhite,
+      appBar: CustomAppBar(
+        cartItemCount: _cartItemCount,
+      ),
+      // El scroll vertical automáticamente cierra el teclado al deslizar
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          // Cierra el teclado cuando el usuario empieza a hacer scroll
+          if (notification is ScrollStartNotification) {
+            FocusScope.of(context).unfocus();
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -238,6 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: AppConstants.bottomNavHeight + 20),
           ],
         ),
+        ),
       ),
       bottomNavigationBar: CustomBottomNavigation(
         currentIndex: _currentBottomNavIndex,
@@ -269,7 +274,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Icon(Icons.remove, color: AppColors.backgroundWhite),
           ),
         ],
-      ),
       ),
     );
   }

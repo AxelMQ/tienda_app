@@ -96,16 +96,16 @@ class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderSt
             child: Container(
           width: AppConstants.categoryCardSize,
           height: AppConstants.categoryCardSize,
-          margin: const EdgeInsets.only(right: AppConstants.smallPadding),
+          margin: const EdgeInsets.only(right: 12),  // Espaciado más generoso
           decoration: BoxDecoration(
             color: widget.backgroundColor ?? AppColors.lightGray,
-            borderRadius: BorderRadius.circular(AppConstants.defaultRadius),
+            borderRadius: BorderRadius.circular(16),  // Bordes más redondeados
             // Sombra sutil estilo minimalista
             boxShadow: [
               BoxShadow(
-                color: AppColors.cardShadow.withOpacity(0.08),
+                color: AppColors.cardShadow.withOpacity(0.06),  // Más sutil
                 offset: const Offset(0, 2),
-                blurRadius: 8,
+                blurRadius: 10,  // Más difuminado
                 spreadRadius: 0,
               ),
             ],
@@ -115,18 +115,18 @@ class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderSt
             children: [
               // Contenedor del ícono o imagen más grande y atractivo
               Container(
-                width: 64,
-                height: 64,
-                padding: const EdgeInsets.all(12),
+                width: 68,  // Ligeramente más grande
+                height: 68,
+                padding: const EdgeInsets.all(14),  // Más espacioso
                 decoration: BoxDecoration(
                   color: AppColors.backgroundWhite,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(18),  // Más redondeado
                   // Sombra muy suave para separar del fondo
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.cardShadow.withOpacity(0.12),
-                      offset: const Offset(0, 2),
-                      blurRadius: 8,
+                      color: AppColors.cardShadow.withOpacity(0.08),  // Más sutil
+                      offset: const Offset(0, 1),
+                      blurRadius: 6,
                       spreadRadius: 0,
                     ),
                   ],
@@ -134,18 +134,19 @@ class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderSt
                 child: _buildCategoryIcon(),
               ),
               
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               
               // Nombre de la categoría
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: Text(
                   widget.name,
                   style: const TextStyle(
                     color: AppColors.textBlack,
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
+                    letterSpacing: 0.3,
+                    height: 1.2,  // Mejor altura de línea
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 2,

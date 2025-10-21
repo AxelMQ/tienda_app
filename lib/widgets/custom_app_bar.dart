@@ -21,7 +21,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppConstants.headerHeight,
       decoration: const BoxDecoration(
         color: AppColors.backgroundWhite,
         // Sombra sutil para dar profundidad sin ser muy invasiva
@@ -35,10 +34,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       child: SafeArea(
+        bottom: false,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppConstants.defaultPadding,
-            vertical: 12.0,
+            vertical: 12.0,  // Compacto pero cómodo
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,20 +56,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           borderRadius: BorderRadius.circular(AppConstants.smallRadius),
                           child: Image.asset(
                             'assets/icons/la_canasta.png',
-                            width: 45,
-                            height: 50,
-                            fit: BoxFit.cover,
+                            width: 38,
+                            height: 38,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 8),
                       // Nombre de la aplicación
                       Text(
                         title,
                         style: const TextStyle(
-                          fontSize: 22,
+                          fontSize: 19,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textBlack,
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ],
@@ -84,7 +85,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: onCartPressed ?? () => _showCart(context),
                 )
               else
-                const SizedBox(width: 48),
+                const SizedBox(width: 40),
             ],
           ),
         ),
@@ -93,7 +94,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(AppConstants.headerHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 6);
 
   // Función temporal que se ejecuta cuando se toca el carrito
   // En una versión completa, esto llevaría al usuario a la pantalla del carrito
@@ -167,17 +168,17 @@ class _CartButtonState extends State<_CartButton> with SingleTickerProviderState
         // Efecto de rebote al soltar el botón
         curve: Curves.easeOutBack,
         child: Container(
-          width: 48,
-          height: 48,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             color: AppColors.primaryRed,
-            borderRadius: BorderRadius.circular(AppConstants.defaultRadius),
+            borderRadius: BorderRadius.circular(10),
             // La sombra se reduce cuando está presionado para dar sensación de profundidad
             boxShadow: [
               BoxShadow(
-                color: AppColors.primaryRed.withOpacity(_isPressed ? 0.2 : 0.3),
+                color: AppColors.primaryRed.withOpacity(_isPressed ? 0.15 : 0.25),
                 offset: Offset(0, _isPressed ? 1 : 2),
-                blurRadius: _isPressed ? 3 : 6,
+                blurRadius: _isPressed ? 2 : 4,
               ),
             ],
           ),
@@ -188,13 +189,13 @@ class _CartButtonState extends State<_CartButton> with SingleTickerProviderState
               const Icon(
                 Icons.shopping_cart_outlined,
                 color: AppColors.backgroundWhite,
-                size: 24,
+                size: 20,
               ),
               // El badge solo aparece cuando hay items en el carrito
               if (widget.cartItemCount > 0)
                 Positioned(
-                  right: -4,
-                  top: -4,
+                  right: -2,
+                  top: -2,
                   child: ScaleTransition(
                     scale: Tween<double>(begin: 1.0, end: 1.3).animate(
                       CurvedAnimation(
@@ -203,19 +204,19 @@ class _CartButtonState extends State<_CartButton> with SingleTickerProviderState
                       ),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(2.5),
                       decoration: BoxDecoration(
                         color: AppColors.accentYellow,
                         shape: BoxShape.circle,
                         // Borde blanco para que resalte del fondo
                         border: Border.all(
                           color: AppColors.backgroundWhite,
-                          width: 2,
+                          width: 1.5,
                         ),
                       ),
                       constraints: const BoxConstraints(
-                        minWidth: 20,
-                        minHeight: 20,
+                        minWidth: 16,
+                        minHeight: 16,
                       ),
                       child: Center(
                         child: Text(
@@ -223,7 +224,7 @@ class _CartButtonState extends State<_CartButton> with SingleTickerProviderState
                           widget.cartItemCount > 99 ? '99+' : '${widget.cartItemCount}',
                           style: const TextStyle(
                             color: AppColors.textBlack,
-                            fontSize: 10,
+                            fontSize: 8.5,
                             fontWeight: FontWeight.bold,
                             height: 1.0,
                           ),
