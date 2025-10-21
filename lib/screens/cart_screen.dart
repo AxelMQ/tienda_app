@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
+import 'checkout_screen.dart';
 
 // Pantalla del carrito de compras con productos agregados
 // Permite modificar cantidades, eliminar productos y ver sugerencias
@@ -369,26 +370,14 @@ class _CartScreenState extends State<CartScreen>
     );
   }
 
-  // Procede al pago (placeholder)
+  // Procede a la pantalla de checkout para finalizar el pago
   void _proceedToCheckout() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              Icons.payment_rounded,
-              color: AppColors.backgroundWhite,
-              size: 20,
-            ),
-            SizedBox(width: 12),
-            Text(
-              'Procesando pago...',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ],
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CheckoutScreen(
+          subtotal: _subtotal,
+          discount: _totalDiscount,
         ),
-        duration: Duration(seconds: 2),
-        backgroundColor: AppColors.primaryRed,
       ),
     );
   }
