@@ -20,6 +20,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Detecta si hay una pantalla anterior para mostrar el botón de "volver"
+    final canPop = Navigator.canPop(context);
+
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.backgroundWhite,
@@ -41,8 +44,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             vertical: 12.0,  // Compacto pero cómodo
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Botón de volver (solo aparece si hay pantalla anterior)
+              if (canPop)
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_rounded,
+                    color: AppColors.textBlack,
+                    size: 24,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 40,
+                    minHeight: 40,
+                  ),
+                )
+              else
+                const SizedBox(width: 40), // Espacio vacío para mantener simetría
+
               // Sección del logo - ocupa todo el espacio disponible y centra el contenido
               Expanded(
                 child: Center(
@@ -85,7 +105,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: onCartPressed ?? () => _showCart(context),
                 )
               else
-                const SizedBox(width: 40),
+                const SizedBox(width: 40), // Espacio simétrico
             ],
           ),
         ),
