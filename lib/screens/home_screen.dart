@@ -12,6 +12,7 @@ import '../widgets/bottom_navigation.dart';
 import 'offers_screen.dart';
 import 'orders_screen.dart';
 import 'profile_screen.dart';
+import 'catalog_screen.dart';
 
 /// Pantalla principal de la aplicación
 class HomeScreen extends StatefulWidget {
@@ -204,10 +205,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             // Categorías
+            // Al tocar una categoría, navega al catálogo con ese filtro pre-seleccionado
             CategoriesList(
               categories: _categories,
               onCategoryTap: (categoryName) {
-                _showSnackBar('Categoría seleccionada: $categoryName');
+                Navigator.of(context).push(
+                  PageTransitions.fadeTransition(
+                    CatalogScreen(initialCategory: categoryName),
+                  ),
+                );
               },
             ),
 
