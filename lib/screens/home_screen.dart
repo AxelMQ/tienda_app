@@ -7,6 +7,7 @@ import '../widgets/search_bar.dart';
 import '../widgets/promo_banner.dart';
 import '../widgets/category_card.dart';
 import '../widgets/product_card.dart';
+import '../widgets/recent_order_card.dart';
 import '../widgets/bottom_navigation.dart';
 import 'offers_screen.dart';
 import 'orders_screen.dart';
@@ -212,16 +213,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: AppConstants.defaultPadding),
 
-            // Pedidos recientes
-            ProductsList(
+            // Pedidos recientes (diseño horizontal optimizado)
+            RecentOrdersList(
               title: AppConstants.recentOrdersTitle,
-              products: _recentOrders,
-              showOrderAgainButton: true,
-              onProductTap: (productName) {
+              orders: _recentOrders,
+              onOrderTap: (productName) {
                 _showSnackBar('Producto seleccionado: $productName');
               },
               onOrderAgain: (productName) {
-                // Usa el método para agregar al carrito
+                // Agrega el producto al carrito
                 _addToCart(productName);
               },
             ),
