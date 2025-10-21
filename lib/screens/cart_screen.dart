@@ -151,17 +151,19 @@ class _CartScreenState extends State<CartScreen>
     // Muestra confirmación
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
-          children: [
+        content: Row(
+          children: const [
             Icon(
               Icons.delete_rounded,
               color: AppColors.backgroundWhite,
               size: 20,
             ),
             SizedBox(width: 12),
-            Text(
-              'Producto eliminado del carrito',
-              style: TextStyle(fontWeight: FontWeight.w600),
+            Expanded(  // Evita overflow en textos largos
+              child: Text(
+                'Producto eliminado del carrito',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
           ],
         ),
@@ -617,34 +619,142 @@ class _CartScreenState extends State<CartScreen>
     );
   }
 
-  // Card de producto en el carrito
+  // Card de producto en el carrito con swipe para eliminar
   Widget _buildCartItem(int index) {
     final item = _cartItems[index];
 
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: AppConstants.defaultPadding,
-        vertical: 8,
-      ),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.lightGray.withOpacity(0.3),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            offset: const Offset(0, 2),
-            blurRadius: 8,
+    return Dismissible(
+      key: Key(item['id']),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) async {
+        // Muestra diálogo de confirmación antes de eliminar
+        return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              '¿Eliminar producto?',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Text(
+              '¿Estás seguro que deseas eliminar "${item['name']}" del carrito?',
+              style: TextStyle(
+                fontSize: 15,
+                color: AppColors.textBlack.withOpacity(0.7),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  'Cancelar',
+                  style: TextStyle(
+                    color: AppColors.textBlack.withOpacity(0.6),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryRed,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Eliminar',
+                  style: TextStyle(
+                    color: AppColors.backgroundWhite,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        );
+      },
+      onDismissed: (direction) {
+        // Elimina el producto después de confirmar
+        setState(() {
+          _cartItems.removeAt(index);
+        });
+
+        // Muestra confirmación
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: const [
+                Icon(
+                  Icons.delete_rounded,
+                  color: AppColors.backgroundWhite,
+                  size: 20,
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Producto eliminado del carrito',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+            duration: const Duration(seconds: 2),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppConstants.smallRadius),
+            ),
+          ),
+        );
+      },
+      // Fondo rojo con ícono de basura al deslizar
+      background: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppConstants.defaultPadding,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.primaryRed,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: const Icon(
+          Icons.delete_rounded,
+          color: AppColors.backgroundWhite,
+          size: 32,
+        ),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppConstants.defaultPadding,
+          vertical: 8,
+        ),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundWhite,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.lightGray.withOpacity(0.3),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              offset: const Offset(0, 2),
+              blurRadius: 8,
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Imagen del producto
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
@@ -728,17 +838,27 @@ class _CartScreenState extends State<CartScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Total por producto
-                    Text(
-                      'Total: Bs. ${(item['price'] * item['quantity']).toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textBlack.withOpacity(0.7),
+                    // Total por producto con animación
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                      child: Text(
+                        'Total: Bs. ${(item['price'] * item['quantity']).toStringAsFixed(2)}',
+                        key: ValueKey(item['price'] * item['quantity']),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textBlack.withOpacity(0.7),
+                        ),
                       ),
                     ),
 
-                    // Contador
+                    // Contador con icono delete cuando quantity = 1 (mejor UX)
                     Container(
                       decoration: BoxDecoration(
                         color: AppColors.lightGray.withOpacity(0.2),
@@ -748,18 +868,33 @@ class _CartScreenState extends State<CartScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _CartButton(
-                            icon: Icons.remove_rounded,
+                            // Muestra icono de delete cuando quantity = 1 para claridad
+                            icon: item['quantity'] == 1
+                                ? Icons.delete_outline_rounded
+                                : Icons.remove_rounded,
                             onPressed: () => _decrementQuantity(index),
+                            isDelete: item['quantity'] == 1,  // Color diferente
                           ),
+                          // AnimatedSwitcher para animar cambios en la cantidad
                           Container(
                             width: 32,
                             alignment: Alignment.center,
-                            child: Text(
-                              '${item['quantity']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textBlack,
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 200),
+                              transitionBuilder: (child, animation) {
+                                return ScaleTransition(
+                                  scale: animation,
+                                  child: child,
+                                );
+                              },
+                              child: Text(
+                                '${item['quantity']}',
+                                key: ValueKey(item['quantity']),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textBlack,
+                                ),
                               ),
                             ),
                           ),
@@ -776,6 +911,7 @@ class _CartScreenState extends State<CartScreen>
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -996,12 +1132,26 @@ class _CartScreenState extends State<CartScreen>
                   color: AppColors.textBlack,
                 ),
               ),
-              Text(
-                'Bs. ${_subtotal.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryRed,
+              // AnimatedSwitcher para animar cambios en el total
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) {
+                  return ScaleTransition(
+                    scale: animation,
+                    child: FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    ),
+                  );
+                },
+                child: Text(
+                  'Bs. ${_subtotal.toStringAsFixed(2)}',
+                  key: ValueKey(_subtotal),  // Cambia cuando el total cambia
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryRed,
+                  ),
                 ),
               ),
             ],
@@ -1040,13 +1190,16 @@ class _CartScreenState extends State<CartScreen>
 }
 
 // Botón para incrementar/decrementar cantidad en el carrito
+// Cambia a color naranja cuando es un botón de eliminar (mejor affordance)
 class _CartButton extends StatefulWidget {
   final IconData icon;
   final VoidCallback onPressed;
+  final bool isDelete;  // Indica si es un botón de eliminar
 
   const _CartButton({
     required this.icon,
     required this.onPressed,
+    this.isDelete = false,
   });
 
   @override
@@ -1058,6 +1211,9 @@ class _CartButtonState extends State<_CartButton> {
 
   @override
   Widget build(BuildContext context) {
+    // Color diferenciado: Naranja para delete, Rojo para otras acciones
+    final buttonColor = widget.isDelete ? Colors.orange : AppColors.primaryRed;
+
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
@@ -1072,7 +1228,7 @@ class _CartButtonState extends State<_CartButton> {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: AppColors.primaryRed.withOpacity(_isPressed ? 1.0 : 0.9),
+            color: buttonColor.withOpacity(_isPressed ? 1.0 : 0.9),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Icon(
