@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
+import 'payment_qr_screen.dart';
+import 'payment_card_screen.dart';
 
 // Pantalla final de pago donde el usuario confirma su pedido
 // Incluye selección de método de pago, datos de entrega y resumen del pedido
@@ -65,21 +67,39 @@ class _CheckoutScreenState extends State<CheckoutScreen>
 
   // Procesa el pago según el método seleccionado
   Future<void> _processPayment() async {
-    setState(() {
-      _isProcessing = true;
-    });
+    // Navega a la pantalla correspondiente según el método seleccionado
+    if (_selectedPaymentMethod == 0) {
+      // Pago con QR
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PaymentQRScreen(total: _total),
+        ),
+      );
+    } else if (_selectedPaymentMethod == 1) {
+      // Pago con Tarjeta
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PaymentCardScreen(total: _total),
+        ),
+      );
+    } else {
+      // Pago en Efectivo - Proceso directo
+      setState(() {
+        _isProcessing = true;
+      });
 
-    // Simula procesamiento de pago (en producción sería llamada a API)
-    await Future.delayed(const Duration(seconds: 2));
+      // Simula confirmación (en producción sería registro en base de datos)
+      await Future.delayed(const Duration(seconds: 2));
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {
-      _isProcessing = false;
-    });
+      setState(() {
+        _isProcessing = false;
+      });
 
-    // Muestra confirmación de pago exitoso
-    _showSuccessDialog();
+      // Muestra confirmación de pago en efectivo
+      _showSuccessDialog();
+    }
   }
 
   // Muestra diálogo de confirmación de pago exitoso
@@ -118,7 +138,9 @@ class _CheckoutScreenState extends State<CheckoutScreen>
             ),
             const SizedBox(height: 12),
             Text(
-              'Tu pedido ha sido procesado correctamente',
+              _selectedPaymentMethod == 2
+                  ? 'Tu pedido ha sido confirmado. Paga en efectivo al recibir'
+                  : 'Tu pedido ha sido procesado correctamente',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,
