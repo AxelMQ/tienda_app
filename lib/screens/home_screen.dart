@@ -6,8 +6,8 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/promo_banner.dart';
 import '../widgets/category_card.dart';
-import '../widgets/product_card.dart';
 import '../widgets/recent_order_card.dart';
+import '../widgets/suggestion_card.dart';
 import '../widgets/bottom_navigation.dart';
 import 'offers_screen.dart';
 import 'orders_screen.dart';
@@ -228,12 +228,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: AppConstants.defaultPadding),
 
-            // Sugerencias
-            ProductsList(
+            // Sugerencias (diseño compacto para agregar rápido)
+            SuggestionsList(
               title: AppConstants.suggestionsTitle,
-              products: _suggestions,
+              suggestions: _suggestions,
               onProductTap: (productName) {
-                // Cuando tocas un producto sugerido, también se agrega al carrito
+                _showSnackBar('Producto: $productName');
+              },
+              onAddToCart: (productName) {
+                // Agrega directamente al carrito
                 _addToCart(productName);
               },
             ),
