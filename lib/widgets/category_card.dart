@@ -115,18 +115,18 @@ class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderSt
             children: [
               // Contenedor del ícono o imagen más grande y atractivo
               Container(
-                width: 56,
-                height: 56,
-                padding: const EdgeInsets.all(10),
+                width: 64,
+                height: 64,
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundWhite,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                   // Sombra muy suave para separar del fondo
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.cardShadow.withOpacity(0.1),
+                      color: AppColors.cardShadow.withOpacity(0.12),
                       offset: const Offset(0, 2),
-                      blurRadius: 6,
+                      blurRadius: 8,
                       spreadRadius: 0,
                     ),
                   ],
@@ -162,20 +162,20 @@ class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderSt
   }
 
   // Muestra imagen PNG si existe, si no usa el ícono de Material
-  // Las imágenes ahora son más grandes para verse mejor
+  // Las imágenes son grandes y se ven perfectas en pantallas modernas
   Widget _buildCategoryIcon() {
     if (widget.imagePath != null) {
       return Image.asset(
         widget.imagePath!,
-        width: 36,  // Aumentado de 28 a 36px
-        height: 36,
+        width: 40,  // Tamaño óptimo para pantallas modernas
+        height: 40,
         fit: BoxFit.contain,
         // Si la imagen falla, muestra el ícono como respaldo
         errorBuilder: (context, error, stackTrace) {
           return Icon(
             widget.icon ?? Icons.category_rounded,
             color: widget.iconColor ?? AppColors.primaryRed,
-            size: 36,
+            size: 40,
           );
         },
       );
@@ -185,7 +185,7 @@ class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderSt
     return Icon(
       widget.icon ?? Icons.category_rounded,
       color: widget.iconColor ?? AppColors.primaryRed,
-      size: 36,
+      size: 40,
     );
   }
 }

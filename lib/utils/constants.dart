@@ -15,7 +15,7 @@ class AppConstants {
   static const double headerHeight = 80.0;
   static const double bottomNavHeight = 80.0;
   static const double searchBarHeight = 50.0;
-  static const double categoryCardSize = 80.0;
+  static const double categoryCardSize = 105.0;  // Aumentado para mejor visibilidad
   static const double productCardHeight = 200.0;
   static const double bannerHeight = 200.0;
   
