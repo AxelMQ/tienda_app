@@ -44,41 +44,48 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Datos de ejemplo para las categorías
+  // Categorías con imágenes PNG personalizadas
+  // Descarga las imágenes y descomenta 'imagePath' para usarlas
   final List<Map<String, dynamic>> _categories = [
     {
       'name': 'Lácteos',
       'icon': Icons.local_drink,
+      // 'imagePath': 'lib/assets/images/categories/lacteos.png',  // Descomenta cuando tengas la imagen
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Carnes',
       'icon': Icons.restaurant,
+      // 'imagePath': 'lib/assets/images/categories/carnes.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Bebidas',
       'icon': Icons.local_bar,
+      // 'imagePath': 'lib/assets/images/categories/bebidas.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Frutas y Verduras',
       'icon': Icons.eco,
+      // 'imagePath': 'lib/assets/images/categories/frutas.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Panadería',
       'icon': Icons.bakery_dining,
+      // 'imagePath': 'lib/assets/images/categories/panaderia.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Limpieza',
       'icon': Icons.cleaning_services,
+      // 'imagePath': 'lib/assets/images/categories/limpieza.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
