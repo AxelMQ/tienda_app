@@ -87,18 +87,25 @@ class _HomeScreenState extends State<HomeScreen> {
   // Datos de ejemplo para el banner promocional
   final List<Map<String, dynamic>> _promoBanners = [
     {
-      'title': 'CHOCOLATE BOMBOM SURTIDO GAROTO 250 GR',
+      'title': 'CHOCOLATE SURTIDO GAROTO 250 GR',
       'currentPrice': 20.90,
       'originalPrice': 28.70,
       'discount': 27,
-      'image': 'assets/images/garoto_chocolate.png',
+      'image': 'lib/assets/images/garoto.jpg',
     },
     {
-      'title': 'OFERTA ESPECIAL - PRODUCTOS SELECCIONADOS',
+      'title': 'OFERTA ESPECIAL',
       'currentPrice': 15.50,
       'originalPrice': 25.00,
       'discount': 38,
-      'image': 'assets/images/oferta_especial.png',
+      'image': 'lib/assets/images/pic_chocolates.jpg',
+    },
+    {
+      'title': 'OFERTA ESPECIAL EN CHOCOLATES',
+      'currentPrice': 15.50,
+      'originalPrice': 25.00,
+      'discount': 38,
+      'image': 'lib/assets/images/garoto_chocolate.webp',
     },
   ];
 
