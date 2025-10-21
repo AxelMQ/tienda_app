@@ -9,10 +9,11 @@ Una aplicación móvil desarrollada en Flutter para una tienda de comercios masi
 ## 🎯 Características Principales
 
 ### 🏠 Pantalla Principal (Home)
-- **AppBar personalizado** con logo "La Canasta" y carrito interactivo dinámico
+- **AppBar personalizado** con logo "La Canasta", carrito interactivo dinámico y botón back automático
+- **Navegación automática** que detecta pantallas anteriores y muestra flecha de retorno
 - **Barra de búsqueda** con animaciones y focus interactivo
 - **Banner promocional** con auto-scroll y transiciones suaves
-- **Categorías** con imágenes PNG, scroll horizontal y animaciones de entrada
+- **Categorías** con imágenes PNG, scroll horizontal, animaciones de entrada y navegación a catálogo
 - **Pedidos recientes** con `RecentOrderCard` horizontal optimizado
 - **Sugerencias personalizadas** con `SuggestionCard` y botón de agregar rápido
 - **Bottom Navigation curveado** con animaciones y 4 secciones
@@ -36,6 +37,21 @@ Una aplicación móvil desarrollada en Flutter para una tienda de comercios masi
 - **Pull-to-refresh** para actualizar historial
 - **Reutilización de componentes** para consistencia
 - **Fecha e icono** en cada pedido
+
+### 🛍️ Pantalla de Catálogo
+- **Grid 2 columnas** con 20 productos reales y imágenes de assets
+- **Filtros profesionales** por categoría, rango de precio y disponibilidad
+- **Chips de categoría** con íconos personalizados y contador de productos
+- **Botón "Limpiar"** que aparece solo cuando hay filtros activos
+- **Filtro de precio** con modal bottom sheet y opciones claras
+- **Toggle de disponibilidad** con color verde (psicología positiva)
+- **Badge de resultados** mostrando cantidad de productos filtrados
+- **Animaciones escalonadas** en entrada de filtros y productos
+- **Búsqueda integrada** que funciona con todos los filtros simultáneamente
+- **Estado vacío** con mensaje claro cuando no hay resultados
+- **Botón flotante** de agregar al carrito en cada producto con animación
+- **SnackBar verde** con ✓ al agregar productos exitosamente
+- **Navegación automática** desde categorías de Home con filtro pre-seleccionado
 
 ### 🎨 Diseño y UX
 - **Paleta de colores**: Rojo primario, blanco, negro y amarillo dorado
@@ -145,19 +161,22 @@ lib/
 ├── main.dart                      # Punto de entrada de la aplicación
 ├── screens/                       # Pantallas de la aplicación
 │   ├── home_screen.dart          # Pantalla principal con categorías y sugerencias
+│   ├── catalog_screen.dart       # Catálogo con filtros, búsqueda y grid de productos
 │   ├── offers_screen.dart        # Pantalla de ofertas con grid 2x2 y carruseles
 │   ├── orders_screen.dart        # Pantalla de pedidos con tabs y animaciones
 │   └── profile_screen.dart       # Pantalla de perfil de usuario
 ├── widgets/                       # Widgets reutilizables
-│   ├── custom_app_bar.dart       # Barra superior con carrito dinámico
+│   ├── custom_app_bar.dart       # Barra superior con carrito dinámico y back automático
 │   ├── bottom_navigation.dart    # Navegación inferior curveada con animaciones
-│   ├── product_card.dart         # Tarjeta vertical de producto con descuentos
+│   ├── product_card.dart         # Tarjeta vertical con botón flotante de agregar
 │   ├── category_card.dart        # Tarjeta de categoría con imágenes PNG
 │   ├── search_bar.dart           # Barra de búsqueda con focus animado
 │   ├── promo_banner.dart         # Banner con auto-scroll y gradiente
 │   ├── offer_banner_card.dart    # Card de oferta con carousel manual integrado
 │   ├── recent_order_card.dart    # Card horizontal para pedidos recientes
-│   └── suggestion_card.dart      # Card compacta con botón + de agregar
+│   ├── suggestion_card.dart      # Card compacta con botón + de agregar
+│   ├── pressable_card.dart       # Widget reutilizable con animación de press
+│   └── pressable_icon_button.dart # Botón de ícono con feedback táctil
 ├── utils/                         # Utilidades
 │   ├── constants.dart            # Constantes de dimensiones y padding
 │   ├── colors.dart               # Paleta de colores de la app
@@ -186,22 +205,25 @@ Dark Gray: #4A5568
 ## 📱 Pantallas Implementadas
 
 1. **Home Screen** - Pantalla principal con categorías, banners, pedidos recientes y sugerencias
-2. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
-3. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
-4. **Profile Screen** - Perfil del usuario con configuración (en desarrollo)
+2. **Catalog Screen** - Catálogo con grid 2 columnas, filtros profesionales y búsqueda integrada
+3. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
+4. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
+5. **Profile Screen** - Perfil del usuario con direcciones, configuración y animaciones
 
 ## 🔧 Desarrollo
 
 ### Widgets Principales
-- `CustomAppBar` - Barra superior con logo, carrito dinámico y animaciones
+- `CustomAppBar` - Barra superior con logo, carrito dinámico, navegación back automática y animaciones
 - `CustomBottomNavigation` - Navegación curveada con indicador animado
-- `ProductCard` - Card vertical con imagen, precio, descuento y botón "Repetir"
-- `CategoryCard` - Card con imagen PNG, animación de entrada y press feedback
+- `ProductCard` - Card vertical con imagen, precio, descuento y botón flotante de agregar al carrito
+- `CategoryCard` - Card con imagen PNG, animación de entrada, press feedback y navegación a catálogo
 - `SearchBar` - Búsqueda con focus animado, border dinámico y botón clear
 - `PromoBanner` - Banner con auto-scroll (4s), pausable y gradiente de legibilidad
 - `OfferBannerCard` - Card con carousel manual, indicadores y pulso en badges
 - `RecentOrderCard` - Card horizontal flexible (botón derecha/abajo)
 - `SuggestionCard` - Card compacta con botón + circular para agregar rápido
+- `PressableCard` - Widget reutilizable con animación de escala al presionar
+- `PressableIconButton` - Botón de ícono reutilizable con feedback táctil
 
 ### Características Técnicas
 - **State Management**: StatefulWidget con gestión de ciclo de vida (dispose correcto)
@@ -252,6 +274,30 @@ Dark Gray: #4A5568
 
 ### 📊 Funcionalidades Avanzadas
 
+#### Sistema de Filtros Profesionales (CatalogScreen)
+- **Filtros combinados** que funcionan simultáneamente
+- **Chips de categoría** con íconos Material Design y contador
+- **Filtro de precio** con modal bottom sheet (4 rangos)
+- **Toggle de disponibilidad** con color verde semántico
+- **Botón "Limpiar"** que solo aparece con filtros activos
+- **Búsqueda integrada** que se combina con todos los filtros
+- **Badge de resultados** mostrando cantidad filtrada
+- **Estado vacío** cuando no hay productos que coincidan
+
+#### Navegación Inteligente
+- **Botón back automático** detecta Navigator.canPop()
+- **Navegación desde categorías** a catálogo con filtro pre-seleccionado
+- **Transiciones personalizadas** fade, fadeScale, slide
+- **Mantiene contexto** del usuario en toda la navegación
+
+#### Botón Flotante de Agregar al Carrito
+- **Posición estratégica** en esquina superior derecha
+- **Animación de press** con escala a 0.85
+- **Confirmación visual** rojo → verde con ícono ✓
+- **Duración temporal** de 600ms antes de volver al estado inicial
+- **SnackBar verde** con mensaje de confirmación
+- **Contador dinámico** que se actualiza en AppBar
+
 #### Contador Regresivo
 - Timer actualizado cada segundo
 - Formato dinámico: "2h 30m" o "30m 15s"
@@ -264,7 +310,7 @@ Dark Gray: #4A5568
 - Sin auto-scroll para no saturar
 - Aplicado en: Grid 2x2 de ofertas
 
-#### Sistema de Filtros
+#### Sistema de Tabs con Filtros
 - TabController con 3 pestañas
 - Filtrado dinámico de datos
 - Estados vacíos personalizados
@@ -273,17 +319,24 @@ Dark Gray: #4A5568
 #### Estados Vacíos
 - Mensajes personalizados por contexto
 - Iconos y textos descriptivos
-- Aplicado en: Pedidos sin resultados
+- Aplicado en: Catálogo y pedidos sin resultados
 
 ### ✨ Características de UI/UX Destacadas
 - **Bottom Navigation Curveado**: Bordes 24px, sombra sutil, indicador animado
 - **Tabs Minimalistas**: Fondo blanco, sombra suave, indicador con sombra propia
 - **Badges Informativos**: Estados visuales (En camino 🚚, Entregado ✓)
+- **Filtros Intuitivos**: Color verde = disponible, rojo = activos, texto claro y descriptivo
+- **Navegación Automática**: Botón back aparece solo cuando es necesario
+- **Botón Flotante**: Agregar al carrito con confirmación visual instantánea
+- **Chips Interactivos**: Categorías con íconos, contador y animaciones de press
+- **Modal Bottom Sheet**: Opciones de precio claras y fáciles de seleccionar
 - **Overlay Gradientes**: Legibilidad de texto sobre imágenes
 - **Sombras Dinámicas**: Profundidad sin sobrecargar
 - **Press Feedback Universal**: Todas las interacciones tienen respuesta visual
 - **Scroll Dismissible**: Teclado se cierra al scrollear
 - **Pull-to-Refresh**: Actualización manual con feedback
+- **Estados Vacíos**: Mensajes contextuales cuando no hay resultados
+- **SnackBars Informativos**: Feedback claro con iconos y colores semánticos
 
 ## 📊 Métricas de Rendimiento
 
