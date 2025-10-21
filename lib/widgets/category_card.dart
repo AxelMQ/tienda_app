@@ -11,6 +11,7 @@ class CategoryCard extends StatefulWidget {
   final VoidCallback? onTap;
   final Color? backgroundColor;
   final Color? iconColor;
+  final int index;  // Para animación escalonada
 
   const CategoryCard({
     super.key,
@@ -20,30 +21,79 @@ class CategoryCard extends StatefulWidget {
     this.onTap,
     this.backgroundColor,
     this.iconColor,
+    this.index = 0,
   });
 
   @override
   State<CategoryCard> createState() => _CategoryCardState();
 }
 
-class _CategoryCardState extends State<CategoryCard> {
+class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderStateMixin {
   bool _isPressed = false;
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    // Animación de entrada: aparece con efecto suave
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    // Escala desde 0.8 hasta 1.0
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutBack,  // Efecto de rebote suave
+    ));
+
+    // Fade desde 0 hasta 1
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    ));
+
+    // Inicia la animación con un delay escalonado según el índice
+    Future.delayed(Duration(milliseconds: 50 * widget.index), () {
+      if (mounted) {
+        _animationController.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) {
-        setState(() => _isPressed = false);
-        widget.onTap?.call();
-      },
-      onTapCancel: () => setState(() => _isPressed = false),
-      child: AnimatedScale(
-        // Efecto sutil al tocar, estilo minimalista
-        scale: _isPressed ? 0.95 : 1.0,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeOut,
-        child: Container(
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) {
+            setState(() => _isPressed = false);
+            widget.onTap?.call();
+          },
+          onTapCancel: () => setState(() => _isPressed = false),
+          child: AnimatedScale(
+            // Efecto sutil al tocar, estilo minimalista
+            scale: _isPressed ? 0.92 : 1.0,
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeOutBack,
+            child: Container(
           width: AppConstants.categoryCardSize,
           height: AppConstants.categoryCardSize,
           margin: const EdgeInsets.only(right: AppConstants.smallPadding),
@@ -63,18 +113,20 @@ class _CategoryCardState extends State<CategoryCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Contenedor del ícono o imagen
+              // Contenedor del ícono o imagen más grande y atractivo
               Container(
-                padding: const EdgeInsets.all(12),
+                width: 56,
+                height: 56,
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundWhite,
-                  borderRadius: BorderRadius.circular(AppConstants.smallRadius),
+                  borderRadius: BorderRadius.circular(14),
                   // Sombra muy suave para separar del fondo
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.cardShadow.withOpacity(0.06),
-                      offset: const Offset(0, 1),
-                      blurRadius: 4,
+                      color: AppColors.cardShadow.withOpacity(0.1),
+                      offset: const Offset(0, 2),
+                      blurRadius: 6,
                       spreadRadius: 0,
                     ),
                   ],
@@ -82,7 +134,7 @@ class _CategoryCardState extends State<CategoryCard> {
                 child: _buildCategoryIcon(),
               ),
               
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               
               // Nombre de la categoría
               Padding(
@@ -104,23 +156,26 @@ class _CategoryCardState extends State<CategoryCard> {
           ),
         ),
       ),
+        ),
+      ),
     );
   }
 
   // Muestra imagen PNG si existe, si no usa el ícono de Material
+  // Las imágenes ahora son más grandes para verse mejor
   Widget _buildCategoryIcon() {
     if (widget.imagePath != null) {
       return Image.asset(
         widget.imagePath!,
-        width: 28,
-        height: 28,
+        width: 36,  // Aumentado de 28 a 36px
+        height: 36,
         fit: BoxFit.contain,
         // Si la imagen falla, muestra el ícono como respaldo
         errorBuilder: (context, error, stackTrace) {
           return Icon(
             widget.icon ?? Icons.category_rounded,
             color: widget.iconColor ?? AppColors.primaryRed,
-            size: 28,
+            size: 36,
           );
         },
       );
@@ -130,7 +185,7 @@ class _CategoryCardState extends State<CategoryCard> {
     return Icon(
       widget.icon ?? Icons.category_rounded,
       color: widget.iconColor ?? AppColors.primaryRed,
-      size: 28,
+      size: 36,
     );
   }
 }
@@ -188,6 +243,7 @@ class CategoriesList extends StatelessWidget {
                 imagePath: category['imagePath'],  // Soporte para imágenes PNG
                 backgroundColor: category['backgroundColor'],
                 iconColor: category['iconColor'],
+                index: index,  // Para animación escalonada
                 onTap: () => onCategoryTap?.call(category['name']),
               );
             },

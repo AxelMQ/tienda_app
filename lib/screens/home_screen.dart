@@ -45,47 +45,46 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Categorías con imágenes PNG personalizadas
-  // Descarga las imágenes y descomenta 'imagePath' para usarlas
   final List<Map<String, dynamic>> _categories = [
     {
       'name': 'Lácteos',
       'icon': Icons.local_drink,
-      // 'imagePath': 'lib/assets/images/categories/lacteos.png',  // Descomenta cuando tengas la imagen
+      'imagePath': 'assets/images/categories/lacteos.png', 
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Carnes',
       'icon': Icons.restaurant,
-      // 'imagePath': 'lib/assets/images/categories/carnes.png',
+      'imagePath': 'assets/images/categories/carnes.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Bebidas',
       'icon': Icons.local_bar,
-      // 'imagePath': 'lib/assets/images/categories/bebidas.png',
+      'imagePath': 'assets/images/categories/bebidas.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Frutas y Verduras',
       'icon': Icons.eco,
-      // 'imagePath': 'lib/assets/images/categories/frutas.png',
+      'imagePath': 'assets/images/categories/frutas.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Panadería',
       'icon': Icons.bakery_dining,
-      // 'imagePath': 'lib/assets/images/categories/panaderia.png',
+      'imagePath': 'assets/images/categories/panderia.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
     {
       'name': 'Limpieza',
       'icon': Icons.cleaning_services,
-      // 'imagePath': 'lib/assets/images/categories/limpieza.png',
+      'imagePath': 'assets/images/categories/limpieza.png',
       'backgroundColor': AppColors.lightGray,
       'iconColor': AppColors.primaryRed,
     },
@@ -98,21 +97,21 @@ class _HomeScreenState extends State<HomeScreen> {
       'currentPrice': 20.90,
       'originalPrice': 28.70,
       'discount': 27,
-      'image': 'lib/assets/images/garoto.jpg',
+      'image': 'assets/images/garoto.jpg',
     },
     {
       'title': 'OFERTA ESPECIAL',
       'currentPrice': 15.50,
       'originalPrice': 25.00,
       'discount': 38,
-      'image': 'lib/assets/images/pic_chocolates.jpg',
+      'image': 'assets/images/pic_chocolates.jpg',
     },
     {
       'title': 'OFERTA ESPECIAL EN CHOCOLATES',
       'currentPrice': 15.50,
       'originalPrice': 25.00,
       'discount': 38,
-      'image': 'lib/assets/images/garoto_chocolate.webp',
+      'image': 'assets/images/garoto_chocolate.webp',
     },
   ];
 

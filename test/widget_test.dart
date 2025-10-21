@@ -1,9 +1,7 @@
-// This is a basic Flutter widget test.
+// Test para la aplicación Tienda App
 //
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// Este test verifica que la aplicación se ejecute correctamente
+// y que los elementos principales estén presentes.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,20 +9,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tienda_app/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Tienda App basic test', (WidgetTester tester) async {
+    // Construir la aplicación y activar un frame
+    await tester.pumpWidget(const TiendaApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verificar que la aplicación se construya sin errores críticos
+    expect(find.byType(MaterialApp), findsOneWidget);
+    
+    // Verificar que el logo "La Canasta" esté presente
+    expect(find.text('La Canasta'), findsOneWidget);
+    
+    // Verificar que la barra de búsqueda esté presente
+    expect(find.byType(TextField), findsOneWidget);
+    
+    // Verificar que el texto de búsqueda esté presente
+    expect(find.text('Buscar Producto'), findsOneWidget);
   });
 }

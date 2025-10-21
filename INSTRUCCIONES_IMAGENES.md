@@ -24,7 +24,7 @@ Descarga **6 imágenes PNG sin fondo** de [flaticon.com](https://www.flaticon.co
 
 Guarda las 6 imágenes en:
 ```
-C:\Users\VICTUS\Documents\proyectos\IHC\tienda_app\lib\assets\images\categories\
+C:\Users\VICTUS\Documents\proyectos\IHC\tienda_app\assets\images\categories\
 ```
 
 La carpeta YA ESTÁ CREADA ✅
@@ -40,7 +40,7 @@ Abre: `lib/screens/home_screen.dart`
 {
   'name': 'Lácteos',
   'icon': Icons.local_drink,
-  // 'imagePath': 'lib/assets/images/categories/lacteos.png',  ⬅️ Comentado
+  // 'imagePath': 'assets/images/categories/lacteos.png',  ⬅️ Comentado
   ...
 },
 ```
@@ -50,7 +50,7 @@ Abre: `lib/screens/home_screen.dart`
 {
   'name': 'Lácteos',
   'icon': Icons.local_drink,
-  'imagePath': 'lib/assets/images/categories/lacteos.png',  ⬅️ Descomentado
+  'imagePath': 'assets/images/categories/lacteos.png',  ⬅️ Descomentado
   ...
 },
 ```
@@ -61,11 +61,36 @@ Presiona **Shift + R** en VS Code o Android Studio para reiniciar la app.
 
 ---
 
-## 🚨 Si NO tienes tiempo de descargar imágenes
+## 🚨 Si SIGUEN Sin Verse las Imágenes
 
-**¡TRANQUILO!** La app funciona PERFECTAMENTE con íconos de Material Design.
+Ejecuta este comando para limpiar la caché:
+```bash
+flutter clean
+flutter pub get
+flutter run
+```
 
-Los íconos se ven profesionales y cumplen con TODOS los parámetros de evaluación ✅
+---
+
+## 📋 Estructura de Carpetas
+
+```
+tienda_app/
+  assets/                    ← En la raíz del proyecto
+    icons/
+      la_canasta.png
+    images/
+      garoto.jpg
+      garoto_chocolate.webp
+      pic_chocolates.jpg
+      categories/              ← Imágenes de categorías aquí
+        lacteos.png
+        carnes.png
+        bebidas.png
+        frutas.png
+        panderia.png
+        limpieza.png
+```
 
 ---
 
@@ -78,6 +103,7 @@ Los íconos se ven profesionales y cumplen con TODOS los parámetros de evaluaci
 - ✅ Soporte PNG con fallback a íconos
 - ✅ Comentarios en lenguaje natural
 - ✅ Sin errores de linter
+- ✅ Rutas corregidas: `assets/` (no `lib/assets/`)
 
 ## 🎯 Parámetros de Evaluación - ¿Cumple?
 
