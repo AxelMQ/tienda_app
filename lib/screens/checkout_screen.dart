@@ -190,22 +190,32 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryRed,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: AppColors.backgroundWhite,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          backgroundColor: AppColors.primaryRed,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppColors.backgroundWhite,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'Último Paso',
-          style: TextStyle(
-            color: AppColors.backgroundWhite,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+          title: const Text(
+            'Último Paso',
+            style: TextStyle(
+              color: AppColors.backgroundWhite,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // Bordes redondeados en la parte inferior para continuidad visual
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
           ),
         ),
       ),

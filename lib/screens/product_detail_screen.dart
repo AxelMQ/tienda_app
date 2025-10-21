@@ -666,6 +666,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
       ),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
+        // Bordes redondeados en la parte superior para continuidad visual
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),

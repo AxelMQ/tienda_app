@@ -386,36 +386,46 @@ class _CartScreenState extends State<CartScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundWhite,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryRed,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: AppColors.backgroundWhite,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text(
-          'Tu carrito',
-          style: TextStyle(
-            color: AppColors.backgroundWhite,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          // Botón para vaciar carrito
-          if (_cartItems.isNotEmpty)
-            IconButton(
-              icon: const Icon(
-                Icons.delete_outline_rounded,
-                color: AppColors.backgroundWhite,
-              ),
-              onPressed: _clearCart,
-              tooltip: 'Vaciar carrito',
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          backgroundColor: AppColors.primaryRed,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppColors.backgroundWhite,
             ),
-        ],
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: const Text(
+            'Tu carrito',
+            style: TextStyle(
+              color: AppColors.backgroundWhite,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            // Botón para vaciar carrito
+            if (_cartItems.isNotEmpty)
+              IconButton(
+                icon: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: AppColors.backgroundWhite,
+                ),
+                onPressed: _clearCart,
+                tooltip: 'Vaciar carrito',
+              ),
+          ],
+          // Bordes redondeados en la parte inferior para continuidad visual
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+        ),
       ),
       body: _cartItems.isEmpty ? _buildEmptyCart() : _buildCartContent(),
     );
