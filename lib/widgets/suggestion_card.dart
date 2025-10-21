@@ -69,7 +69,7 @@ class _SuggestionCardState extends State<SuggestionCard> {
               Stack(
                 children: [
                   Container(
-                    height: 100,  // Compacto
+                    height: 95,  // Ajustado para evitar overflow
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: AppColors.lightGray,
@@ -130,7 +130,7 @@ class _SuggestionCardState extends State<SuggestionCard> {
 
               // Información del producto (compacta)
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -147,7 +147,7 @@ class _SuggestionCardState extends State<SuggestionCard> {
                       overflow: TextOverflow.ellipsis,
                     ),
 
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
 
                     // Fila con precio y botón +
                     Row(
@@ -163,8 +163,9 @@ class _SuggestionCardState extends State<SuggestionCard> {
                                 'Bs. ${widget.price.toStringAsFixed(2)}',
                                 style: const TextStyle(
                                   color: AppColors.primaryRed,
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold,
+                                  height: 1.0,
                                 ),
                               ),
 
@@ -175,8 +176,9 @@ class _SuggestionCardState extends State<SuggestionCard> {
                                   'Bs. ${widget.originalPrice!.toStringAsFixed(2)}',
                                   style: const TextStyle(
                                     color: AppColors.textLightGray,
-                                    fontSize: 10,
+                                    fontSize: 9,
                                     decoration: TextDecoration.lineThrough,
+                                    height: 1.0,
                                   ),
                                 ),
                             ],
@@ -196,8 +198,8 @@ class _SuggestionCardState extends State<SuggestionCard> {
                             duration: const Duration(milliseconds: 150),
                             curve: Curves.easeOutBack,
                             child: Container(
-                              width: 36,
-                              height: 36,
+                              width: 32,
+                              height: 32,
                               decoration: BoxDecoration(
                                 color: AppColors.primaryRed,
                                 shape: BoxShape.circle,
@@ -212,7 +214,7 @@ class _SuggestionCardState extends State<SuggestionCard> {
                               child: const Icon(
                                 Icons.add_rounded,
                                 color: AppColors.backgroundWhite,
-                                size: 22,
+                                size: 20,
                               ),
                             ),
                           ),
@@ -295,7 +297,7 @@ class SuggestionsList extends StatelessWidget {
 
         // Lista horizontal de sugerencias
         SizedBox(
-          height: 180,  // Compacto para sugerencias rápidas
+          height: 190,  // Altura ajustada para evitar overflow
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.fromLTRB(
