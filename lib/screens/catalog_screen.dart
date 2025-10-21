@@ -542,7 +542,7 @@ class _CatalogScreenState extends State<CatalogScreen>
                           child: Row(
                             children: [
                               Icon(
-                                Icons.tune_rounded,
+                                Icons.attach_money_rounded,
                                 size: 18,
                                 color: _priceFilter != 'Todos'
                                     ? AppColors.primaryRed
@@ -551,7 +551,7 @@ class _CatalogScreenState extends State<CatalogScreen>
                               const SizedBox(width: 8),
                               Flexible(
                                 child: Text(
-                                  _priceFilter == 'Todos' ? 'Precio' : _priceFilter,
+                                  _priceFilter == 'Todos' ? 'Rango de precio' : _priceFilter,
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: _priceFilter != 'Todos'
@@ -583,7 +583,7 @@ class _CatalogScreenState extends State<CatalogScreen>
 
               const SizedBox(width: 10),
 
-              // Filtro de disponibilidad (toggle) mejorado
+              // Filtro de disponibilidad (toggle) mejorado con texto claro
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -598,19 +598,19 @@ class _CatalogScreenState extends State<CatalogScreen>
                   ),
                   decoration: BoxDecoration(
                     color: _onlyAvailable
-                        ? AppColors.primaryRed
+                        ? Colors.green
                         : AppColors.backgroundWhite,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: _onlyAvailable
-                          ? AppColors.primaryRed
+                          ? Colors.green
                           : AppColors.lightGray.withOpacity(0.5),
                       width: _onlyAvailable ? 2 : 1.5,
                     ),
                     boxShadow: _onlyAvailable
                         ? [
                             BoxShadow(
-                              color: AppColors.primaryRed.withOpacity(0.2),
+                              color: Colors.green.withOpacity(0.2),
                               offset: const Offset(0, 2),
                               blurRadius: 8,
                             ),
@@ -623,7 +623,7 @@ class _CatalogScreenState extends State<CatalogScreen>
                       Icon(
                         _onlyAvailable
                             ? Icons.check_circle_rounded
-                            : Icons.inventory_2_outlined,
+                            : Icons.circle_outlined,
                         size: 18,
                         color: _onlyAvailable
                             ? AppColors.backgroundWhite
@@ -631,7 +631,7 @@ class _CatalogScreenState extends State<CatalogScreen>
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Stock',
+                        'Disponible',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight:
