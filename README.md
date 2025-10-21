@@ -174,6 +174,38 @@ Una aplicación móvil desarrollada en Flutter para una tienda de comercios masi
 - **Timing optimizado** para ritmo natural de lectura
 - **AppBar sin botón back** para evitar confusión
 - **Bordes redondeados** (20px) en AppBar para continuidad
+- **Navegación a seguimiento** al presionar "Ver mi pedido"
+
+### 📍 Pantalla de Seguimiento de Pedido
+- **Card de tiempo estimado** con llegada y badge "En Hora" pulsante
+- **Badge "En Hora"** con animación de pulso continua (1500ms loop)
+- **Barra de progreso visual** actualiza dinámicamente de 0% a 100%
+- **Actualización en tiempo real** cada 3 segundos con Timer
+- **Mapa con ruta** usando imagen estática (enfoque UI/UX)
+- **Marcador del repartidor** con animación bounce continua (2000ms loop)
+- **Tiempo restante dinámico** actualiza de 25 min a "Llegando..." con AnimatedSwitcher
+- **Distancia dinámica** disminuye automáticamente (2.3 km → 0.1 km)
+- **4 estados de progreso** Confirmado → Preparando → En camino → Entregado
+- **Iconos por estado** Check, Restaurant, Delivery, Home con colores
+- **Líneas de conexión** animadas entre estados (verde cuando completado)
+- **Estado actual destacado** con shadow y animación
+- **Card de producto** muestra el combo pedido con imagen
+- **Info del repartidor** con avatar circular y badge online verde
+- **Botón "Enviar mensaje"** para contactar al repartidor
+- **Método de pago** mostrado con ícono QR distintivo
+- **Botón "Compartir"** outlined con borde gris
+- **Botón "Necesitas Ayuda"** elevated en rojo prominente
+- **Pull-to-refresh** funcional actualiza el progreso
+- **7 animaciones escalonadas** de entrada (0ms a 600ms)
+- **RefreshIndicator** con color rojo primario
+- **SafeArea** para todos los dispositivos
+- **Bordes redondeados** (20px) en AppBar para continuidad
+- **3 AnimationController** con dispose correcto
+- **Timer cancelado** en dispose para evitar memory leaks
+- **Mounted check** antes de setState
+- **Placeholder claro** para imagen del mapa con instrucciones
+- **Navegación desde OrdersScreen** al tap en pedido "En camino"
+- **Navegación desde OrderSuccessScreen** con botón "Ver mi pedido"
 
 ### 🎨 Diseño y UX
 - **Paleta de colores**: Rojo primario, blanco, negro y amarillo dorado
@@ -290,6 +322,7 @@ lib/
 │   ├── payment_qr_screen.dart    # Pantalla de pago con código QR
 │   ├── payment_card_screen.dart  # Pantalla de pago con tarjeta de crédito/débito
 │   ├── order_success_screen.dart # Confirmación exitosa con diferenciación por método
+│   ├── order_tracking_screen.dart # Seguimiento en tiempo real del pedido
 │   ├── offers_screen.dart        # Pantalla de ofertas con grid 2x2 y carruseles
 │   ├── orders_screen.dart        # Pantalla de pedidos con tabs y animaciones
 │   └── profile_screen.dart       # Pantalla de perfil de usuario
@@ -408,7 +441,22 @@ Dark Gray: #4A5568
 - **Total del carrito**: ScaleTransition + FadeTransition (300ms)
 - **Contador de cantidad**: ScaleTransition (200ms)
 - **Total por producto**: FadeTransition (250ms)
+- **Tiempo restante**: ScaleTransition en seguimiento (500ms)
+- **Tiempo estimado**: ScaleTransition en seguimiento (500ms)
 - Actualización suave cuando cambian valores numéricos
+
+#### Bounce Animation (Repartidor)
+- Marcador del repartidor sube y baja continuamente
+- AnimationController con repeat(reverse: true)
+- Duración: 2000ms con curve easeInOut
+- Aplicado en: OrderTrackingScreen marcador
+
+#### Timer con Actualización en Tiempo Real
+- Timer.periodic actualiza cada 3 segundos
+- Minutos restantes disminuyen gradualmente
+- Distancia se reduce automáticamente
+- Progreso de ruta aumenta (0.0 a 1.0)
+- Aplicado en: OrderTrackingScreen
 - Aplicado en: CartScreen
 
 #### Transiciones
@@ -502,6 +550,23 @@ Dark Gray: #4A5568
 - **Animaciones escalonadas** 4 secciones (0ms, 100ms, 200ms, 300ms)
 - **Footer fijo elevado** SafeArea y sombra superior
 
+#### Seguimiento en Tiempo Real
+- **OrderTrackingScreen** con actualización automática cada 3 segundos
+- **Timer.periodic** que simula movimiento del repartidor
+- **3 AnimationController** (entrada, pulso, bounce)
+- **Badge "En Hora"** con pulso continuo (1500ms loop infinite)
+- **Marcador animado** del repartidor con bounce (2000ms loop)
+- **Progreso dinámico** minutos, distancia y porcentaje
+- **4 estados visuales** con iconos y colores semánticos
+- **AnimatedContainer** en transiciones de estado (300ms)
+- **LinearProgressIndicator** animada para tiempo
+- **AnimatedSwitcher** en valores dinámicos (500ms)
+- **Pull-to-refresh** funcional con RefreshIndicator
+- **Navegación contextual** desde Orders y Success
+- **Dispose correcto** cancela Timer y libera controllers
+- **Mounted check** antes de cada setState
+- **Placeholder educativo** para imagen del mapa
+
 #### Botón Flotante de Agregar al Carrito
 - **Posición estratégica** en esquina superior derecha
 - **Animación de press** con escala a 0.85
@@ -573,6 +638,13 @@ Dark Gray: #4A5568
 - **SnackBars Informativos**: Feedback claro con iconos y colores semánticos
 - **Placeholder con Ejemplos**: Guía al usuario sobre cómo usar campos opcionales
 - **Swipe para Eliminar**: Patrón nativo iOS/Android con fondo rojo visible
+- **Actualización en Tiempo Real**: Timer que simula movimiento del repartidor cada 3s
+- **Badge Online**: Indicador verde en avatar del repartidor
+- **Progreso Visual Completo**: 4 estados con iconos, colores y líneas de conexión
+- **Estado Actual Destacado**: Shadow y animación en paso activo
+- **Marcador Bounce**: Animación continua del repartidor en el mapa
+- **Valores Dinámicos**: Minutos, distancia y progreso actualizan automáticamente
+- **Placeholder Educativo**: Instrucciones claras para reemplazar con imagen real
 - **Confirmación de Eliminación**: Diálogo antes de acciones destructivas
 - **Botón Delete Inteligente**: Cambia a naranja cuando quantity = 1 (mejor affordance)
 - **Totales Animados**: Valores numéricos se actualizan con animaciones fluidas
