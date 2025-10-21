@@ -100,12 +100,12 @@ class _CategoryCardState extends State<CategoryCard> with SingleTickerProviderSt
           decoration: BoxDecoration(
             color: AppColors.backgroundWhite,  // Fondo blanco limpio
             borderRadius: BorderRadius.circular(16),
-            // Sombra sutil y uniforme
+            // Sombra visible pero elegante
             boxShadow: [
               BoxShadow(
-                color: AppColors.cardShadow.withOpacity(0.08),
-                offset: const Offset(0, 2),
-                blurRadius: 8,
+                color: AppColors.cardShadow.withOpacity(0.12),
+                offset: const Offset(0, 3),
+                blurRadius: 10,
                 spreadRadius: 0,
               ),
             ],
@@ -216,11 +216,15 @@ class CategoriesList extends StatelessWidget {
           height: AppConstants.categoryCardSize + 20,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.defaultPadding,
+            padding: const EdgeInsets.fromLTRB(
+              AppConstants.defaultPadding,  // Izquierda
+              8,  // Arriba - espacio para sombra superior
+              AppConstants.defaultPadding,  // Derecha
+              8,  // Abajo - espacio para sombra inferior
             ),
             // Para scroll suave en dispositivos
             physics: const BouncingScrollPhysics(),
+            clipBehavior: Clip.none,  // Permite que las sombras se vean completamente
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final category = categories[index];

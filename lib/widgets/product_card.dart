@@ -55,8 +55,8 @@ class _ProductCardState extends State<ProductCard> {
             borderRadius: BorderRadius.circular(16),  // Más redondeado
             boxShadow: [
               BoxShadow(
-                color: AppColors.cardShadow.withOpacity(0.06),  // Sombra sutil
-                offset: const Offset(0, 2),
+                color: AppColors.cardShadow.withOpacity(0.12),  // Sombra visible pero elegante
+                offset: const Offset(0, 3),
                 blurRadius: 10,
                 spreadRadius: 0,
               ),
@@ -261,11 +261,15 @@ class ProductsList extends StatelessWidget {
           height: showOrderAgainButton ? 260 : 220,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.defaultPadding,
+            padding: const EdgeInsets.fromLTRB(
+              AppConstants.defaultPadding,  // Izquierda
+              8,  // Arriba - espacio para sombra superior
+              AppConstants.defaultPadding,  // Derecha
+              8,  // Abajo - espacio para sombra inferior
             ),
             // Para scroll suave en dispositivos
             physics: const BouncingScrollPhysics(),
+            clipBehavior: Clip.none,  // Permite que las sombras se vean completamente
             itemCount: products.length,
             itemBuilder: (context, index) {
               final product = products[index];
