@@ -153,23 +153,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
-      appBar: CustomAppBar(
-        cartItemCount: _cartItemCount,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Barra de búsqueda
-            CustomSearchBar(
-              controller: _searchController,
-              onChanged: (value) {
-                // TODO: Implementar búsqueda de productos
-                print('Buscando: $value');
-              },
-            ),
+    return GestureDetector(
+      // Cuando tocas en cualquier parte de la pantalla, el teclado se cierra
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundWhite,
+        appBar: CustomAppBar(
+          cartItemCount: _cartItemCount,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Barra de búsqueda
+              CustomSearchBar(
+                controller: _searchController,
+                onChanged: (value) {
+                  // TODO: Implementar búsqueda de productos
+                  print('Buscando: $value');
+                },
+              ),
 
             // Banner promocional
             PromoBanner(
@@ -251,6 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Icon(Icons.remove, color: AppColors.backgroundWhite),
           ),
         ],
+      ),
       ),
     );
   }
