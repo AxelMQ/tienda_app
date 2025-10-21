@@ -272,7 +272,8 @@ class _BannerCardState extends State<_BannerCard> {
                   ),
                 
                 // Capa oscura degradada para que el texto siempre se vea bien
-                // Sin importar si la imagen es clara u oscura
+                // La parte superior es transparente para mostrar el producto
+                // La parte inferior es bien oscura para que el texto destaque
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -284,29 +285,29 @@ class _BannerCardState extends State<_BannerCard> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withOpacity(0.0),
-                          Colors.black.withOpacity(0.7),
-                          Colors.black.withOpacity(0.9),
+                          Colors.black.withOpacity(0.0),   // Transparente arriba (se ve el producto)
+                          Colors.black.withOpacity(0.25),  // Oscureciendo en el medio
+                          Colors.black.withOpacity(0.75),  // Casi negro abajo (protege el texto)
                         ],
-                        stops: const [0.0, 0.5, 1.0],
+                        stops: const [0.0, 0.3, 1.0],  // Transición más rápida
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Nombre del producto en oferta con sombra para mejor legibilidad
+                        // Nombre del producto con sombra sutil estilo minimalista
                         Text(
                           widget.banner['title'] ?? 'Producto en Oferta',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.backgroundWhite,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             shadows: [
                               Shadow(
-                                color: Colors.black,
-                                offset: Offset(1, 1),
-                                blurRadius: 3,
+                                color: Colors.black.withOpacity(0.5),
+                                offset: const Offset(0, 1),
+                                blurRadius: 2,
                               ),
                             ],
                           ),
@@ -315,18 +316,18 @@ class _BannerCardState extends State<_BannerCard> {
                         ),
                         const SizedBox(height: 4),
                         
-                        // Precio actual con descuento (color amarillo que se ve en cualquier fondo)
+                        // Precio actual con descuento, amarillo que destaca de forma limpia
                         Text(
                           'Bs. ${widget.banner['currentPrice']?.toStringAsFixed(2) ?? '0.00'}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.accentYellow,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             shadows: [
                               Shadow(
-                                color: Colors.black,
-                                offset: Offset(1, 1),
-                                blurRadius: 4,
+                                color: Colors.black.withOpacity(0.5),
+                                offset: const Offset(0, 1),
+                                blurRadius: 2,
                               ),
                             ],
                           ),
@@ -336,15 +337,15 @@ class _BannerCardState extends State<_BannerCard> {
                         if (widget.banner['originalPrice'] != null)
                           Text(
                             'ANTES: ${widget.banner['originalPrice']?.toStringAsFixed(2) ?? '0.00'}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.backgroundWhite,
                               fontSize: 14,
                               decoration: TextDecoration.lineThrough,
                               shadows: [
                                 Shadow(
-                                  color: Colors.black,
-                                  offset: Offset(1, 1),
-                                  blurRadius: 3,
+                                  color: Colors.black.withOpacity(0.5),
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 2,
                                 ),
                               ],
                             ),
