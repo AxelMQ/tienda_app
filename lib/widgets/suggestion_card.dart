@@ -297,7 +297,7 @@ class SuggestionsList extends StatelessWidget {
 
         // Lista horizontal de sugerencias
         SizedBox(
-          height: 190,  // Altura ajustada para evitar overflow
+          height: 192,  // Altura calculada: 95px imagen + 80px info + margen extra
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.fromLTRB(
