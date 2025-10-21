@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
+import '../utils/page_transitions.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/bottom_navigation.dart';
 import 'offers_screen.dart';
@@ -88,19 +89,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
           
           setState(() => _currentIndex = index);
           
-          // Navegar según el índice
+          // Navegación con transición de fade rápida para mejor UX
           switch (index) {
             case 0:
               Navigator.of(context).pop(); // Volver a Home
               break;
             case 1:
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const OffersScreen()),
+                PageTransitions.fadeTransition(const OffersScreen()),
               );
               break;
             case 3:
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                PageTransitions.fadeTransition(const ProfileScreen()),
               );
               break;
           }

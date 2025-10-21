@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
+import '../utils/page_transitions.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/promo_banner.dart';
@@ -255,30 +256,30 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _handleBottomNavTap(int index) {
-    // Navegación a diferentes pantallas según el tab seleccionado
+    // Navegación a diferentes pantallas con transiciones personalizadas
     switch (index) {
       case 0:
         // Ya estamos en la pantalla de inicio, no hacer nada
         break;
       case 1:
-        // Navegar a pantalla de ofertas
+        // Navegar a pantalla de ofertas con fade rápido
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const OffersScreen()),
+          PageTransitions.fadeTransition(const OffersScreen()),
         );
         // Resetear el índice cuando volvamos
         setState(() => _currentBottomNavIndex = 0);
         break;
       case 2:
-        // Navegar a pantalla de pedidos
+        // Navegar a pantalla de pedidos con fade rápido
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const OrdersScreen()),
+          PageTransitions.fadeTransition(const OrdersScreen()),
         );
         setState(() => _currentBottomNavIndex = 0);
         break;
       case 3:
-        // Navegar a pantalla de perfil
+        // Navegar a pantalla de perfil con fade rápido
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          PageTransitions.fadeTransition(const ProfileScreen()),
         );
         setState(() => _currentBottomNavIndex = 0);
         break;
