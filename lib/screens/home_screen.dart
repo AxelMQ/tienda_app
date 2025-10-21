@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'image': 'assets/images/pepsi_3L.webp',  // Corregido nombre y extensión
     },
     {
-      'name': 'Chocolate Garoto 250gr',
+      'name': 'Chocolate Garoto',
       'price': 45.0,
       'originalPrice': 50.0,
       'discount': 10,
