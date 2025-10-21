@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
+import '../screens/cart_screen.dart';
 
 // Barra superior de la aplicación que muestra el logo y el carrito
 // Diseñada para ser consistente en todas las pantallas
@@ -116,14 +117,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 6);
 
-  // Función temporal que se ejecuta cuando se toca el carrito
-  // En una versión completa, esto llevaría al usuario a la pantalla del carrito
+  // Navega a la pantalla del carrito de compras
+  // Se ejecuta cuando el usuario toca el botón del carrito en el AppBar
   void _showCart(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Carrito de compras'),
-        duration: Duration(seconds: 1),
-        behavior: SnackBarBehavior.floating,
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const CartScreen(),
       ),
     );
   }
