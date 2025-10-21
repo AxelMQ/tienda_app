@@ -77,6 +77,28 @@ Una aplicación móvil desarrollada en Flutter para una tienda de comercios masi
 - **Botón volver** circular con fondo translúcido en esquina superior
 - **8 tipos de animaciones** profesionales integradas
 
+### 🛒 Pantalla de Carrito
+- **Lista dinámica** de productos con imagen (80x80px), nombre, precio y descuento
+- **Swipe para eliminar** deslizando hacia la izquierda (patrón iOS/Android)
+- **Fondo rojo animado** con ícono de basura visible al deslizar
+- **Confirmación antes de eliminar** con diálogo personalizado
+- **Contador animado** con AnimatedSwitcher (escala 200ms)
+- **Botón delete inteligente** que aparece cuando cantidad = 1 (color naranja)
+- **Total por producto animado** con fade suave al cambiar cantidad
+- **Validación de stock** con mensaje cuando alcanza el máximo
+- **Subtotal dinámico animado** con ScaleTransition + FadeTransition (300ms)
+- **Cálculo de ahorros** mostrando descuento total en verde
+- **Card de información de entrega** con tiempo estimado y costo
+- **Sección "Te tientas algo más?"** con sugerencias horizontales
+- **Botón + circular** para agregar sugerencias rápidamente
+- **Botón "Vaciar carrito"** en AppBar con confirmación
+- **Footer fijo elevado** con sombra superior y padding safe area
+- **Botón "IR A PAGAR"** prominente en rojo con 16px de padding
+- **Estado vacío profesional** con mensaje claro y botón de explorar
+- **3 tipos de SnackBars** contextuales (naranja eliminado, verde agregado, negro stock)
+- **Animaciones de entrada escalonadas** en todos los elementos
+- **4 niveles de animación** integrados (swipe, counter, total, subtotal)
+
 ### 🎨 Diseño y UX
 - **Paleta de colores**: Rojo primario, blanco, negro y amarillo dorado
 - **Diseño minimalista**: Sombras sutiles, bordes redondeados, espaciado generoso
@@ -187,6 +209,7 @@ lib/
 │   ├── home_screen.dart          # Pantalla principal con categorías y sugerencias
 │   ├── catalog_screen.dart       # Catálogo con filtros, búsqueda y grid de productos
 │   ├── product_detail_screen.dart # Detalle de producto con Hero animation y notas
+│   ├── cart_screen.dart          # Carrito con swipe eliminar y animaciones avanzadas
 │   ├── offers_screen.dart        # Pantalla de ofertas con grid 2x2 y carruseles
 │   ├── orders_screen.dart        # Pantalla de pedidos con tabs y animaciones
 │   └── profile_screen.dart       # Pantalla de perfil de usuario
@@ -232,9 +255,10 @@ Dark Gray: #4A5568
 1. **Home Screen** - Pantalla principal con categorías, banners, pedidos recientes y sugerencias
 2. **Catalog Screen** - Catálogo con grid 2 columnas, filtros profesionales y búsqueda integrada
 3. **Product Detail Screen** - Detalle completo con Hero animation, contador, notas y confirmación
-4. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
-5. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
-6. **Profile Screen** - Perfil del usuario con direcciones, configuración y animaciones
+4. **Cart Screen** - Carrito con swipe para eliminar, animaciones de totales y sugerencias inteligentes
+5. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
+6. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
+7. **Profile Screen** - Perfil del usuario con direcciones, configuración y animaciones
 
 ## 🔧 Desarrollo
 
@@ -276,7 +300,7 @@ Dark Gray: #4A5568
 #### Entrada Escalonada (Staggered Entry)
 - Cards aparecen uno por uno con delay escalonado
 - Combinación de FadeTransition + SlideTransition
-- Aplicado en: Grid de ofertas, lista de pedidos, categorías
+- Aplicado en: Grid de ofertas, lista de pedidos, categorías, carrito
 
 #### Pulso (Pulse)
 - Elementos activos laten sutilmente (6-8% de crecimiento)
@@ -293,10 +317,23 @@ Dark Gray: #4A5568
 - Duration: 150ms con curve easeOutBack
 - Aplicado en: Todos los elementos interactivos
 
+#### Swipe to Delete (Dismissible)
+- Deslizar productos hacia la izquierda para eliminar
+- Fondo rojo animado con ícono de basura
+- Confirmación con diálogo antes de eliminar definitivamente
+- Aplicado en: CartScreen items
+
+#### AnimatedSwitcher en Valores Dinámicos
+- **Total del carrito**: ScaleTransition + FadeTransition (300ms)
+- **Contador de cantidad**: ScaleTransition (200ms)
+- **Total por producto**: FadeTransition (250ms)
+- Actualización suave cuando cambian valores numéricos
+- Aplicado en: CartScreen
+
 #### Transiciones
 - Fade entre tabs (300ms)
-- Hero para logo entre pantallas
-- Page transitions personalizadas
+- Hero para logo y productos entre pantallas
+- Page transitions personalizadas (fade, fadeScale, slide)
 
 ### 📊 Funcionalidades Avanzadas
 
@@ -329,6 +366,24 @@ Dark Gray: #4A5568
 - **8 animaciones integradas** staggered, fade, slide, scale, hero
 - **Divisores con gradiente** organización visual entre secciones
 - **Descripciones contextuales** generadas según categoría del producto
+
+#### CartScreen Completo
+- **Swipe to Delete nativo** patrón iOS/Android con Dismissible widget
+- **Fondo animado** rojo con ícono de basura al deslizar
+- **Confirmación doble** diálogo antes de eliminar definitivamente
+- **Contador con AnimatedSwitcher** escala suave al cambiar cantidad (200ms)
+- **Total animado** ScaleTransition + FadeTransition al actualizar (300ms)
+- **Subtotal por item animado** FadeTransition individual (250ms)
+- **Botón delete inteligente** naranja cuando quantity = 1 (mejor affordance)
+- **Validación de stock** SnackBar negro cuando alcanza máximo
+- **Cálculo de ahorros** muestra descuento total en verde
+- **Card de entrega** con tiempo estimado y costo separados
+- **Sugerencias contextuales** con botón + para agregar rápido
+- **Estado vacío profesional** con ícono, mensaje y CTA "Explorar"
+- **3 tipos de SnackBars** semánticos (naranja, verde, negro)
+- **Botón "Vaciar carrito"** en AppBar con confirmación
+- **Footer fijo elevado** con SafeArea y sombra superior
+- **Animaciones de entrada** staggered en todos los elementos
 
 #### Botón Flotante de Agregar al Carrito
 - **Posición estratégica** en esquina superior derecha
@@ -386,6 +441,14 @@ Dark Gray: #4A5568
 - **Estados Vacíos**: Mensajes contextuales cuando no hay resultados
 - **SnackBars Informativos**: Feedback claro con iconos y colores semánticos
 - **Placeholder con Ejemplos**: Guía al usuario sobre cómo usar campos opcionales
+- **Swipe para Eliminar**: Patrón nativo iOS/Android con fondo rojo visible
+- **Confirmación de Eliminación**: Diálogo antes de acciones destructivas
+- **Botón Delete Inteligente**: Cambia a naranja cuando quantity = 1 (mejor affordance)
+- **Totales Animados**: Valores numéricos se actualizan con animaciones fluidas
+- **Validación de Stock**: Mensajes contextuales cuando alcanza límite
+- **Cálculo de Ahorros Visible**: Descuento total mostrado en verde
+- **Sugerencias Contextuales**: "Te tientas algo más?" en momento oportuno
+- **Footer Elevado**: Sombra superior y padding SafeArea para navegación gestual
 
 ## 📊 Métricas de Rendimiento
 
