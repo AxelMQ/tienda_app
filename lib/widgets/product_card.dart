@@ -73,32 +73,35 @@ class _ProductCardState extends State<ProductCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Imagen del producto (ahora con Image.asset para assets locales)
-                  Container(
-                    height: 110,  // Más alta para mejor visualización
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundWhite,  // Fondo blanco como en Figma
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
+                  // Imagen del producto con Hero animation para transición suave al detalle
+                  Hero(
+                    tag: 'product_${widget.name}',  // Tag único para cada producto
+                    child: Container(
+                      height: 110,  // Más alta para mejor visualización
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundWhite,  // Fondo blanco como en Figma
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
                       ),
+                      child: widget.imagePath != null
+                          ? ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
+                              child: Image.asset(
+                                widget.imagePath!,
+                                fit: BoxFit.cover,  // cover para rellenar todo el espacio
+                                width: double.infinity,
+                                height: double.infinity,
+                                errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+                              ),
+                            )
+                          : _buildPlaceholder(),
                     ),
-                    child: widget.imagePath != null
-                        ? ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16),
-                            ),
-                            child: Image.asset(
-                              widget.imagePath!,
-                              fit: BoxFit.cover,  // cover para rellenar todo el espacio
-                              width: double.infinity,
-                              height: double.infinity,
-                              errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
-                            ),
-                          )
-                        : _buildPlaceholder(),
                   ),
                   
                   // Información del producto
