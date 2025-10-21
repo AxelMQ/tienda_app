@@ -15,6 +15,7 @@ class AppColors {
   // Colores de texto
   static const Color textBlack = Color(0xFF2D3748);
   static const Color textDarkGray = Color(0xFF4A5568);
+  static const Color textGray = Color(0xFF718096);
   static const Color textLightGray = Color(0xFF718096);
   
   // Colores de acento
