@@ -3,6 +3,7 @@ import '../utils/colors.dart';
 import '../utils/constants.dart';
 import 'payment_qr_screen.dart';
 import 'payment_card_screen.dart';
+import 'order_success_screen.dart';
 
 // Pantalla final de pago donde el usuario confirma su pedido
 // Incluye selección de método de pago, datos de entrega y resumen del pedido
@@ -102,77 +103,13 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     }
   }
 
-  // Muestra diálogo de confirmación de pago exitoso
+  // Navega a la pantalla de éxito después de confirmar el pedido (pago en efectivo)
   void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.check_circle_rounded,
-                color: Colors.green,
-                size: 50,
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              '¡Pago Exitoso!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textBlack,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              _selectedPaymentMethod == 2
-                  ? 'Tu pedido ha sido confirmado. Paga en efectivo al recibir'
-                  : 'Tu pedido ha sido procesado correctamente',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                color: AppColors.textBlack.withOpacity(0.7),
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Regresa al home y limpia el stack de navegación
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryRed,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Volver al inicio',
-                  style: TextStyle(
-                    color: AppColors.backgroundWhite,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => OrderSuccessScreen(
+          paymentMethod: 'cash',
+          total: _total,
         ),
       ),
     );

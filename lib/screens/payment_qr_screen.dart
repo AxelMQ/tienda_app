@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
+import 'order_success_screen.dart';
 
 // Pantalla de pago con código QR
 // Muestra un QR generado para el pago y permite al usuario confirmar cuando pagó
@@ -102,75 +103,13 @@ class _PaymentQRScreenState extends State<PaymentQRScreen>
     _showSuccessDialog();
   }
 
-  // Muestra diálogo de confirmación de pago exitoso
+  // Navega a la pantalla de éxito después de confirmar el pago
   void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.check_circle_rounded,
-                color: Colors.green,
-                size: 50,
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              '¡Pago Confirmado!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textBlack,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Tu pago con QR ha sido verificado exitosamente',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                color: AppColors.textBlack.withOpacity(0.7),
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Regresa al home y limpia el stack de navegación
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryRed,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Volver al inicio',
-                  style: TextStyle(
-                    color: AppColors.backgroundWhite,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => OrderSuccessScreen(
+          paymentMethod: 'qr',
+          total: widget.total,
         ),
       ),
     );
