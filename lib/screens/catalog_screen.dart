@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
+import '../utils/page_transitions.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/product_card.dart';
+import 'product_detail_screen.dart';
 
 // Pantalla de catálogo de productos con filtros y búsqueda
 // Permite explorar productos por categoría, precio y disponibilidad
@@ -777,19 +779,41 @@ class _CatalogScreenState extends State<CatalogScreen>
     );
   }
 
-  // Muestra detalle del producto (placeholder)
+  // Navega a la pantalla de detalle del producto
+  // Usa Hero animation para transición suave de la imagen
   void _showProductDetail(Map<String, dynamic> product) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Ver detalles de ${product['name']}'),
-        duration: const Duration(seconds: 2),
-        backgroundColor: AppColors.primaryRed,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.smallRadius),
+    Navigator.of(context).push(
+      PageTransitions.fadeScaleTransition(
+        ProductDetailScreen(
+          name: product['name'],
+          price: product['price'],
+          originalPrice: product['originalPrice'],
+          discount: product['discount'],
+          imagePath: product['image'],
+          description: _getProductDescription(product['name']),
+          category: product['category'],
+          available: product['available'],
         ),
       ),
     );
+  }
+
+  // Genera una descripción para el producto
+  // En producción vendría de la base de datos
+  String _getProductDescription(String productName) {
+    if (productName.contains('Leche')) {
+      return 'Leche fresca y nutritiva de alta calidad. Ideal para toda la familia.';
+    } else if (productName.contains('Carne')) {
+      return 'Carne fresca de primera calidad. Perfecta para tus preparaciones favoritas.';
+    } else if (productName.contains('Coca') || productName.contains('Pepsi')) {
+      return 'Bebida refrescante y deliciosa. Perfecta para acompañar tus comidas.';
+    } else if (productName.contains('Pan')) {
+      return 'Pan fresco recién horneado. Ideal para el desayuno o merienda.';
+    } else if (productName.contains('Naranja') || productName.contains('Palta') || productName.contains('Kiwi')) {
+      return 'Fruta fresca y de temporada. Rica en vitaminas y nutrientes.';
+    } else {
+      return 'Producto de alta calidad seleccionado especialmente para ti.';
+    }
   }
 
   // Agrega un producto al carrito
