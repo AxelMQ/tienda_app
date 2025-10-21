@@ -53,6 +53,30 @@ Una aplicación móvil desarrollada en Flutter para una tienda de comercios masi
 - **SnackBar verde** con ✓ al agregar productos exitosamente
 - **Navegación automática** desde categorías de Home con filtro pre-seleccionado
 
+### 🔍 Pantalla de Detalle de Producto
+- **Hero Animation** de la imagen desde ProductCard con transición suave
+- **Imagen ampliada** de 400px de alto con gradiente inferior
+- **Información completa** con chip de categoría, nombre (24px), precio (32px)
+- **Badge de descuento** amarillo con porcentaje y sombra
+- **Precio original tachado** cuando hay descuento activo
+- **Descripción detallada** del producto contextual por categoría
+- **Contador interactivo** con botones +/- y validación (mínimo 1)
+- **Campo de notas** visible con fondo gris, borde, ícono de lápiz y 200 caracteres
+- **Badge "Opcional"** para reducir ansiedad del usuario
+- **Botón "Limpiar"** que aparece solo cuando hay texto en notas
+- **Placeholder con ejemplos** para guiar al usuario (Ej: Sin cebolla, bien cocido)
+- **Botón "Listo"** en teclado para cerrar fácilmente
+- **Card de disponibilidad** con color semántico (verde disponible, rojo agotado)
+- **Footer adaptativo** que se oculta automáticamente cuando aparece el teclado
+- **Total dinámico** calculado en tiempo real (precio × cantidad)
+- **Botón agregar** que cambia de rojo a verde con ✓ al confirmar
+- **SnackBar verde** con mensaje de confirmación
+- **Auto-cierre** y regreso automático a catálogo después de agregar
+- **GestureDetector global** para cerrar teclado al tocar fuera del campo
+- **Divisores sutiles** con gradiente entre secciones para mejor organización
+- **Botón volver** circular con fondo translúcido en esquina superior
+- **8 tipos de animaciones** profesionales integradas
+
 ### 🎨 Diseño y UX
 - **Paleta de colores**: Rojo primario, blanco, negro y amarillo dorado
 - **Diseño minimalista**: Sombras sutiles, bordes redondeados, espaciado generoso
@@ -162,6 +186,7 @@ lib/
 ├── screens/                       # Pantallas de la aplicación
 │   ├── home_screen.dart          # Pantalla principal con categorías y sugerencias
 │   ├── catalog_screen.dart       # Catálogo con filtros, búsqueda y grid de productos
+│   ├── product_detail_screen.dart # Detalle de producto con Hero animation y notas
 │   ├── offers_screen.dart        # Pantalla de ofertas con grid 2x2 y carruseles
 │   ├── orders_screen.dart        # Pantalla de pedidos con tabs y animaciones
 │   └── profile_screen.dart       # Pantalla de perfil de usuario
@@ -206,9 +231,10 @@ Dark Gray: #4A5568
 
 1. **Home Screen** - Pantalla principal con categorías, banners, pedidos recientes y sugerencias
 2. **Catalog Screen** - Catálogo con grid 2 columnas, filtros profesionales y búsqueda integrada
-3. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
-4. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
-5. **Profile Screen** - Perfil del usuario con direcciones, configuración y animaciones
+3. **Product Detail Screen** - Detalle completo con Hero animation, contador, notas y confirmación
+4. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
+5. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
+6. **Profile Screen** - Perfil del usuario con direcciones, configuración y animaciones
 
 ## 🔧 Desarrollo
 
@@ -287,8 +313,22 @@ Dark Gray: #4A5568
 #### Navegación Inteligente
 - **Botón back automático** detecta Navigator.canPop()
 - **Navegación desde categorías** a catálogo con filtro pre-seleccionado
+- **Navegación al detalle** con Hero animation desde ProductCard
 - **Transiciones personalizadas** fade, fadeScale, slide
 - **Mantiene contexto** del usuario en toda la navegación
+- **Auto-regreso** después de agregar producto al carrito
+
+#### ProductDetailScreen Completo
+- **Hero Animation profesional** imagen vuela desde ProductCard
+- **Footer adaptativo inteligente** se oculta con teclado (AnimatedPositioned 200ms)
+- **GestureDetector global** cierra teclado al tocar fuera del campo
+- **Contador interactivo** con validación mínimo 1 y animaciones de press
+- **Campo de notas visible** fondo gris, borde 1.5px, ícono lápiz
+- **Total dinámico en tiempo real** precio × cantidad actualizado
+- **Confirmación visual completa** rojo → verde con ✓ por 600ms
+- **8 animaciones integradas** staggered, fade, slide, scale, hero
+- **Divisores con gradiente** organización visual entre secciones
+- **Descripciones contextuales** generadas según categoría del producto
 
 #### Botón Flotante de Agregar al Carrito
 - **Posición estratégica** en esquina superior derecha
@@ -324,12 +364,20 @@ Dark Gray: #4A5568
 ### ✨ Características de UI/UX Destacadas
 - **Bottom Navigation Curveado**: Bordes 24px, sombra sutil, indicador animado
 - **Tabs Minimalistas**: Fondo blanco, sombra suave, indicador con sombra propia
-- **Badges Informativos**: Estados visuales (En camino 🚚, Entregado ✓)
+- **Badges Informativos**: Estados visuales (En camino 🚚, Entregado ✓, Opcional)
 - **Filtros Intuitivos**: Color verde = disponible, rojo = activos, texto claro y descriptivo
 - **Navegación Automática**: Botón back aparece solo cuando es necesario
 - **Botón Flotante**: Agregar al carrito con confirmación visual instantánea
 - **Chips Interactivos**: Categorías con íconos, contador y animaciones de press
 - **Modal Bottom Sheet**: Opciones de precio claras y fáciles de seleccionar
+- **Hero Animations**: Transiciones suaves de imágenes entre pantallas
+- **Footer Adaptativo**: Se oculta automáticamente cuando aparece el teclado
+- **Campo de Notas Visible**: Fondo gris, borde claro, ícono de lápiz, affordance perfecta
+- **Contador Intuitivo**: Botones +/- con validación y feedback inmediato
+- **Total Dinámico**: Precio actualizado en tiempo real según cantidad
+- **Confirmación Progresiva**: Botón rojo → verde con ✓ → SnackBar → Auto-cierre
+- **Divisores Sutiles**: Gradientes para organizar secciones sin ser intrusivos
+- **GestureDetector Global**: Cierra teclado al tocar cualquier parte de la pantalla
 - **Overlay Gradientes**: Legibilidad de texto sobre imágenes
 - **Sombras Dinámicas**: Profundidad sin sobrecargar
 - **Press Feedback Universal**: Todas las interacciones tienen respuesta visual
@@ -337,6 +385,7 @@ Dark Gray: #4A5568
 - **Pull-to-Refresh**: Actualización manual con feedback
 - **Estados Vacíos**: Mensajes contextuales cuando no hay resultados
 - **SnackBars Informativos**: Feedback claro con iconos y colores semánticos
+- **Placeholder con Ejemplos**: Guía al usuario sobre cómo usar campos opcionales
 
 ## 📊 Métricas de Rendimiento
 
