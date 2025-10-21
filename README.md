@@ -98,6 +98,28 @@ Una aplicación móvil desarrollada en Flutter para una tienda de comercios masi
 - **3 tipos de SnackBars** contextuales (naranja eliminado, verde agregado, negro stock)
 - **Animaciones de entrada escalonadas** en todos los elementos
 - **4 niveles de animación** integrados (swipe, counter, total, subtotal)
+- **Navegación a checkout** al confirmar el pedido
+
+### 💳 Pantalla de Checkout (Último Paso)
+- **3 métodos de pago** con iconos distintivos (QR gris, Tarjeta azul, Efectivo verde)
+- **Selección animada** con borde rojo (2px), check circular y shadow
+- **Press feedback** en cada opción (escala a 0.97)
+- **Color de fondo sutil** en método seleccionado (rojo 5% opacity)
+- **Datos de entrega editables** con dirección actual y botón "Cambiar"
+- **Instrucciones de entrega** personalizables con botón "Editar"
+- **Datos de facturación** (nombre y NIT) con botón "Cambiar"
+- **Card de resumen completo** con fondo gris claro y borde
+- **Desglose de costos** productos, envío (Bs. 5), servicio (Bs. 2)
+- **Descuento visible** en verde cuando existe
+- **Total animado** con AnimatedSwitcher (300ms)
+- **Botón PAGAR prominente** rojo 56px de alto con shadow
+- **Loading indicator** circular blanco al procesar pago
+- **Diálogo de éxito** no dismissible con ícono verde grande
+- **Mensaje de confirmación** claro y profesional
+- **Botón "Volver al inicio"** que limpia todo el stack de navegación
+- **Footer fijo elevado** con sombra superior
+- **Animaciones de entrada escalonadas** (0ms, 100ms, 200ms, 300ms)
+- **8 tipos de animaciones** integradas (staggered, fade, slide, scale, container)
 
 ### 🎨 Diseño y UX
 - **Paleta de colores**: Rojo primario, blanco, negro y amarillo dorado
@@ -210,6 +232,7 @@ lib/
 │   ├── catalog_screen.dart       # Catálogo con filtros, búsqueda y grid de productos
 │   ├── product_detail_screen.dart # Detalle de producto con Hero animation y notas
 │   ├── cart_screen.dart          # Carrito con swipe eliminar y animaciones avanzadas
+│   ├── checkout_screen.dart      # Checkout con métodos de pago y confirmación
 │   ├── offers_screen.dart        # Pantalla de ofertas con grid 2x2 y carruseles
 │   ├── orders_screen.dart        # Pantalla de pedidos con tabs y animaciones
 │   └── profile_screen.dart       # Pantalla de perfil de usuario
@@ -256,9 +279,10 @@ Dark Gray: #4A5568
 2. **Catalog Screen** - Catálogo con grid 2 columnas, filtros profesionales y búsqueda integrada
 3. **Product Detail Screen** - Detalle completo con Hero animation, contador, notas y confirmación
 4. **Cart Screen** - Carrito con swipe para eliminar, animaciones de totales y sugerencias inteligentes
-5. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
-6. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
-7. **Profile Screen** - Perfil del usuario con direcciones, configuración y animaciones
+5. **Checkout Screen** - Último paso con métodos de pago, resumen y confirmación de pedido
+6. **Offers Screen** - Ofertas con grid 2x2, carruseles manuales, contador regresivo y shimmer
+7. **Orders Screen** - Historial con tabs, filtros, animaciones escalonadas y estados vacíos
+8. **Profile Screen** - Perfil del usuario con direcciones, configuración y animaciones
 
 ## 🔧 Desarrollo
 
@@ -384,6 +408,29 @@ Dark Gray: #4A5568
 - **Botón "Vaciar carrito"** en AppBar con confirmación
 - **Footer fijo elevado** con SafeArea y sombra superior
 - **Animaciones de entrada** staggered en todos los elementos
+- **Navegación a Checkout** pasa subtotal y descuento como parámetros
+
+#### CheckoutScreen Completo
+- **3 métodos de pago** QR (gris), Tarjeta (azul), Efectivo (verde)
+- **Selección con AnimatedContainer** borde cambia de gris a rojo (200ms)
+- **Check circular animado** aparece en método seleccionado
+- **Press feedback con AnimatedScale** a 0.97 en cada opción
+- **Fondo sutil** rojo 5% opacity cuando está seleccionado
+- **Shadow dinámica** aparece solo en opción activa
+- **Cards de datos editables** entrega, instrucciones y facturación
+- **Iconos contextuales** delivery, descripción, factura
+- **Botones de acción** "Cambiar" y "Editar" en color rojo
+- **Resumen en card** fondo gris claro con borde
+- **Desglose completo** productos, envío (Bs. 5), servicio (Bs. 2)
+- **Sección descuento** con divider, solo visible si existe
+- **Total con AnimatedSwitcher** ScaleTransition (300ms)
+- **Botón PAGAR** 56px alto, rojo prominente, shadow elevation
+- **Loading state** circular indicator blanco al procesar
+- **Diálogo no dismissible** barrierDismissible: false
+- **Confirmación visual** ícono verde 80x80px con fondo circular
+- **Navegación al home** popUntil limpia todo el stack
+- **Animaciones escalonadas** 4 secciones (0ms, 100ms, 200ms, 300ms)
+- **Footer fijo elevado** SafeArea y sombra superior
 
 #### Botón Flotante de Agregar al Carrito
 - **Posición estratégica** en esquina superior derecha
@@ -449,6 +496,13 @@ Dark Gray: #4A5568
 - **Cálculo de Ahorros Visible**: Descuento total mostrado en verde
 - **Sugerencias Contextuales**: "Te tientas algo más?" en momento oportuno
 - **Footer Elevado**: Sombra superior y padding SafeArea para navegación gestual
+- **Métodos de Pago Visuales**: Iconos y colores distintos (gris QR, azul tarjeta, verde efectivo)
+- **Selección Clara**: Borde rojo 2px, check circular, fondo sutil y shadow dinámica
+- **Datos Editables Explícitos**: Botones "Cambiar" y "Editar" en cada sección
+- **Resumen Visual**: Card con fondo gris claro y desglose completo de costos
+- **Loading State Claro**: Circular indicator blanco en botón al procesar pago
+- **Confirmación No Dismissible**: Diálogo que asegura que el usuario vea el mensaje de éxito
+- **Navegación Inteligente**: PopUntil limpia el stack y regresa al inicio después del pago
 
 ## 📊 Métricas de Rendimiento
 
