@@ -13,6 +13,7 @@ class RecentOrderCard extends StatefulWidget {
   final String? imagePath;
   final VoidCallback? onTap;
   final VoidCallback? onOrderAgain;
+  final bool buttonOnRight;  // true: botón a la derecha, false: botón abajo
 
   const RecentOrderCard({
     super.key,
@@ -23,6 +24,7 @@ class RecentOrderCard extends StatefulWidget {
     this.imagePath,
     this.onTap,
     this.onOrderAgain,
+    this.buttonOnRight = true,  // Por defecto a la derecha (más eficiente)
   });
 
   @override
@@ -46,7 +48,7 @@ class _RecentOrderCardState extends State<RecentOrderCard> {
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeOutBack,
         child: Container(
-          height: 100,
+          height: widget.buttonOnRight ? 100 : 140,  // Más alto si botón está abajo
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: AppColors.backgroundWhite,
@@ -61,8 +63,16 @@ class _RecentOrderCardState extends State<RecentOrderCard> {
               ),
             ],
           ),
-          child: Row(
-            children: [
+          child: widget.buttonOnRight ? _buildHorizontalLayout() : _buildVerticalLayout(),
+        ),
+      ),
+    );
+  }
+
+  // Layout con botón a la DERECHA (más eficiente para repetir pedidos)
+  Widget _buildHorizontalLayout() {
+    return Row(
+      children: [
               // Imagen del producto a la izquierda
               Container(
                 width: 100,
@@ -164,42 +174,182 @@ class _RecentOrderCardState extends State<RecentOrderCard> {
                 ),
               ),
 
-              // Botón "Volver a Pedir" a la derecha
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: ElevatedButton(
-                  onPressed: widget.onOrderAgain,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryRed,
-                    foregroundColor: AppColors.backgroundWhite,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.refresh_rounded, size: 20),
-                      SizedBox(height: 2),
-                      Text(
-                        'Repetir',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
+        // Botón "Volver a Pedir" a la derecha (siempre visible)
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: _buildOrderButton(),
+        ),
+      ],
+    );
+  }
+
+  // Layout con botón ABAJO (más espacio para info del producto)
+  Widget _buildVerticalLayout() {
+    return Column(
+      children: [
+        // Fila superior: imagen + info
+        Row(
+          children: [
+            // Imagen del producto
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: AppColors.lightGray,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  bottomLeft: Radius.circular(16),
                 ),
               ),
-            ],
+              child: widget.imagePath != null
+                  ? ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        bottomLeft: Radius.circular(16),
+                      ),
+                      child: Image.asset(
+                        widget.imagePath!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            _buildPlaceholder(),
+                      ),
+                    )
+                  : _buildPlaceholder(),
+            ),
+
+            // Información del producto
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.name,
+                      style: const TextStyle(
+                        color: AppColors.textBlack,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    
+                    const SizedBox(height: 6),
+                    
+                    Text(
+                      'Bs. ${widget.price.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: AppColors.primaryRed,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    
+                    if (widget.originalPrice != null && 
+                        widget.originalPrice! > widget.price)
+                      Row(
+                        children: [
+                          Text(
+                            'Bs. ${widget.originalPrice!.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: AppColors.textLightGray,
+                              fontSize: 11,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          if (widget.discount != null) ...[
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.accentYellow,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${widget.discount}% ${AppConstants.discountText}',
+                                style: const TextStyle(
+                                  color: AppColors.textBlack,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // Botón abajo (ancho completo)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: widget.onOrderAgain,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryRed,
+                foregroundColor: AppColors.backgroundWhite,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 0,
+              ),
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: const Text(
+                'Volver a Pedir',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
           ),
         ),
+      ],
+    );
+  }
+
+  // Botón de "Repetir" (reutilizable para ambos layouts)
+  Widget _buildOrderButton() {
+    return ElevatedButton(
+      onPressed: widget.onOrderAgain,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primaryRed,
+        foregroundColor: AppColors.backgroundWhite,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 0,
+      ),
+      child: const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.refresh_rounded, size: 20),
+          SizedBox(height: 2),
+          Text(
+            'Repetir',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -216,13 +366,15 @@ class _RecentOrderCardState extends State<RecentOrderCard> {
   }
 }
 
-// Lista vertical de pedidos recientes
-// Se muestra con scroll vertical para ver todo el historial
+// Lista de pedidos recientes flexible (scroll vertical u horizontal)
+// Por defecto scroll vertical (mejor para historial de pedidos)
 class RecentOrdersList extends StatelessWidget {
   final String title;
   final List<Map<String, dynamic>> orders;
   final Function(String)? onOrderTap;
   final Function(String)? onOrderAgain;
+  final bool isHorizontal;  // true: scroll horizontal, false: scroll vertical
+  final bool buttonOnRight;  // Posición del botón en cada card
 
   const RecentOrdersList({
     super.key,
@@ -230,6 +382,8 @@ class RecentOrdersList extends StatelessWidget {
     required this.orders,
     this.onOrderTap,
     this.onOrderAgain,
+    this.isHorizontal = false,  // Por defecto vertical (mejor UX para historial)
+    this.buttonOnRight = true,  // Por defecto a la derecha (más eficiente)
   });
 
   @override
@@ -254,26 +408,70 @@ class RecentOrdersList extends StatelessWidget {
           ),
         ),
         
-        // Lista de pedidos recientes (scroll vertical)
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppConstants.defaultPadding,
-          ),
-          child: Column(
-            children: orders.map((order) {
-              return RecentOrderCard(
-                name: order['name'],
-                price: order['price'],
-                originalPrice: order['originalPrice'],
-                discount: order['discount'],
-                imagePath: order['image'],
-                onTap: () => onOrderTap?.call(order['name']),
-                onOrderAgain: () => onOrderAgain?.call(order['name']),
-              );
-            }).toList(),
-          ),
-        ),
+        // Lista de pedidos (vertical u horizontal según configuración)
+        isHorizontal ? _buildHorizontalList() : _buildVerticalList(),
       ],
+    );
+  }
+
+  // Lista con scroll VERTICAL (mejor para historial completo)
+  Widget _buildVerticalList() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.defaultPadding,
+      ),
+      child: Column(
+        children: orders.map((order) {
+          return RecentOrderCard(
+            name: order['name'],
+            price: order['price'],
+            originalPrice: order['originalPrice'],
+            discount: order['discount'],
+            imagePath: order['image'],
+            buttonOnRight: buttonOnRight,
+            onTap: () => onOrderTap?.call(order['name']),
+            onOrderAgain: () => onOrderAgain?.call(order['name']),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  // Lista con scroll HORIZONTAL (alternativa si se necesita)
+  Widget _buildHorizontalList() {
+    final height = buttonOnRight ? 120 : 160;
+    
+    return SizedBox(
+      height: height.toDouble(),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(
+          AppConstants.defaultPadding,
+          8,
+          AppConstants.defaultPadding,
+          8,
+        ),
+        physics: const BouncingScrollPhysics(),
+        clipBehavior: Clip.none,
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          final order = orders[index];
+          return Container(
+            width: 280,  // Ancho fijo para scroll horizontal
+            margin: const EdgeInsets.only(right: 12),
+            child: RecentOrderCard(
+              name: order['name'],
+              price: order['price'],
+              originalPrice: order['originalPrice'],
+              discount: order['discount'],
+              imagePath: order['image'],
+              buttonOnRight: buttonOnRight,
+              onTap: () => onOrderTap?.call(order['name']),
+              onOrderAgain: () => onOrderAgain?.call(order['name']),
+            ),
+          );
+        },
+      ),
     );
   }
 }
