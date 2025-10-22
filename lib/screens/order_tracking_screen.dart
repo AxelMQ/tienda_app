@@ -114,13 +114,27 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text(
-            'Seguimiento de Pedido',
-            style: TextStyle(
-              color: AppColors.backgroundWhite,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Seguimiento de Pedido',
+                style: TextStyle(
+                  color: AppColors.backgroundWhite,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'ID: ${widget.orderId}',
+                style: TextStyle(
+                  color: AppColors.backgroundWhite.withOpacity(0.9),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           ),
           // Bordes redondeados en la parte inferior para continuidad visual
           shape: const RoundedRectangleBorder(
@@ -320,48 +334,12 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
         borderRadius: BorderRadius.circular(16),
         child: Stack(
           children: [
-            // Mapa (imagen estática - reemplazar con screenshot de Google Maps)
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.grey[300]!,
-                    Colors.grey[400]!,
-                  ],
-                ),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.map_outlined,
-                      size: 64,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Mapa de Ruta',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Reemplazar con:\nassets/images/map_route.png',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[500],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            // Mapa (imagen estática del mapa con ruta)
+            Image.asset(
+              'assets/images/map_route.png',
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
             ),
 
             // Marcador del repartidor con animación de bounce
@@ -686,27 +664,46 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
               ],
             ),
           ),
-          // Botón enviar mensaje
-          TextButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Funcionalidad de chat'),
-                  duration: Duration(seconds: 1),
+          // Botones de llamada y mensaje
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Botón llamar
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Llamando al repartidor...'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.phone_rounded),
+                color: Colors.green,
+                iconSize: 22,
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.green.withOpacity(0.1),
                 ),
-              );
-            },
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            ),
-            child: const Text(
-              'Enviar mensaje',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: AppColors.primaryRed,
               ),
-            ),
+              const SizedBox(width: 4),
+              // Botón enviar mensaje
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Funcionalidad de chat'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.chat_bubble_rounded),
+                color: AppColors.primaryRed,
+                iconSize: 22,
+                style: IconButton.styleFrom(
+                  backgroundColor: AppColors.primaryRed.withOpacity(0.1),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -766,6 +763,15 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen>
                   ),
                 ),
               ],
+            ),
+          ),
+          // Monto total
+          const Text(
+            'Bs 15.00',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryRed,
             ),
           ),
         ],

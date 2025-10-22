@@ -4,6 +4,7 @@ import '../utils/constants.dart';
 import 'payment_qr_screen.dart';
 import 'payment_card_screen.dart';
 import 'order_success_screen.dart';
+import 'change_location_screen.dart';
 
 // Pantalla final de pago donde el usuario confirma su pedido
 // Incluye selección de método de pago, datos de entrega y resumen del pedido
@@ -31,9 +32,9 @@ class _CheckoutScreenState extends State<CheckoutScreen>
 
   // Datos de entrega (en producción vendrían del state manager)
   final String _deliveryAddress = 'Santa Cruz, calle 13';
-  final String _deliveryInstructions = 'Dejar en la puerta del edificio';
-  final String _billingName = 'Perez Juan';
-  final String _billingNIT = '8456671';
+  String _deliveryInstructions = 'Dejar en la puerta del edificio';
+  String _billingName = 'Perez Juan';
+  String _billingNIT = '8456671';
 
   // Costos adicionales
   final double _deliveryFee = 5.0;
@@ -115,32 +116,627 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     );
   }
 
-  // Abre modal para cambiar dirección de entrega
-  void _changeDeliveryAddress() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Funcionalidad de cambiar dirección'),
-        duration: Duration(seconds: 1),
+  // Abre pantalla para cambiar dirección de entrega
+  void _changeDeliveryAddress() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeLocationScreen(
+          currentAddress: _deliveryAddress,
+        ),
       ),
     );
+
+    // Si se seleccionó una nueva dirección, actualizar el estado
+    if (result != null && mounted) {
+      setState(() {
+        // En producción, aquí se actualizaría el state manager
+        // _deliveryAddress = result;
+      });
+    }
   }
 
   // Abre modal para editar instrucciones de entrega
   void _editDeliveryInstructions() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Funcionalidad de editar instrucciones'),
-        duration: Duration(seconds: 1),
+    final TextEditingController controller = TextEditingController(
+      text: _deliveryInstructions,
+    );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => AnimatedPadding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.backgroundWhite,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                offset: const Offset(0, -2),
+                blurRadius: 20,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Indicador de arrastre
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.lightGray.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Header con icono
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryRed.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.edit_note_rounded,
+                      color: AppColors.primaryRed,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Instrucciones de Entrega',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textBlack,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Ayuda al repartidor a encontrarte',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textBlack.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Campo de texto mejorado
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      offset: const Offset(0, 1),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: controller,
+                  maxLines: 4,
+                  maxLength: 150,
+                  autofocus: true,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    height: 1.5,
+                    color: AppColors.textBlack,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Ej: Tocar el timbre, casa azul con portón negro',
+                    hintStyle: TextStyle(
+                      color: AppColors.textBlack.withOpacity(0.4),
+                      fontSize: 14,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.lightGray.withOpacity(0.15),
+                    contentPadding: const EdgeInsets.all(16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColors.lightGray.withOpacity(0.6),
+                        width: 1.5,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColors.lightGray.withOpacity(0.6),
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: AppColors.primaryRed,
+                        width: 2,
+                      ),
+                    ),
+                    counterStyle: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textBlack.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Botones mejorados
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side: BorderSide(
+                          color: AppColors.lightGray.withOpacity(0.4),
+                          width: 1.5,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancelar',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textBlack,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _deliveryInstructions = controller.text.trim();
+                        });
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Instrucciones guardadas',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: Colors.green,
+                            behavior: SnackBarBehavior.floating,
+                            duration: const Duration(seconds: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.check_rounded, size: 20),
+                      label: const Text(
+                        'Guardar',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryRed,
+                        foregroundColor: AppColors.backgroundWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   // Abre modal para cambiar datos de facturación
   void _changeBillingData() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Funcionalidad de cambiar facturación'),
-        duration: Duration(seconds: 1),
+    final TextEditingController nameController = TextEditingController(
+      text: _billingName,
+    );
+    final TextEditingController nitController = TextEditingController(
+      text: _billingNIT,
+    );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => AnimatedPadding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.backgroundWhite,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                offset: const Offset(0, -2),
+                blurRadius: 20,
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Indicador de arrastre
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.lightGray.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Header con icono
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.receipt_long_rounded,
+                      color: Colors.blue,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Datos de Facturación',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textBlack,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Información para tu factura',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textBlack.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Campo Nombre con icono
+              Row(
+                children: [
+                  Icon(
+                    Icons.person_outline_rounded,
+                    size: 20,
+                    color: AppColors.textBlack.withOpacity(0.6),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Nombre / Razón Social',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textBlack,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      offset: const Offset(0, 1),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: nameController,
+                  textCapitalization: TextCapitalization.words,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: AppColors.textBlack,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Ej: Juan Perez',
+                    hintStyle: TextStyle(
+                      color: AppColors.textBlack.withOpacity(0.4),
+                      fontSize: 14,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.lightGray.withOpacity(0.15),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColors.lightGray.withOpacity(0.6),
+                        width: 1.5,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColors.lightGray.withOpacity(0.6),
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: AppColors.primaryRed,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Campo NIT con icono
+              Row(
+                children: [
+                  Icon(
+                    Icons.badge_outlined,
+                    size: 20,
+                    color: AppColors.textBlack.withOpacity(0.6),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'NIT / CI',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textBlack,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      offset: const Offset(0, 1),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: nitController,
+                  keyboardType: TextInputType.number,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: AppColors.textBlack,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Ej: 8456671',
+                    hintStyle: TextStyle(
+                      color: AppColors.textBlack.withOpacity(0.4),
+                      fontSize: 14,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.lightGray.withOpacity(0.15),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColors.lightGray.withOpacity(0.6),
+                        width: 1.5,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColors.lightGray.withOpacity(0.6),
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: AppColors.primaryRed,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Botones mejorados
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side: BorderSide(
+                          color: AppColors.lightGray.withOpacity(0.4),
+                          width: 1.5,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancelar',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textBlack,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        if (nameController.text.trim().isEmpty ||
+                            nitController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.warning_rounded,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Completa ambos campos',
+                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                              backgroundColor: Colors.orange,
+                              behavior: SnackBarBehavior.floating,
+                              duration: const Duration(seconds: 2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        setState(() {
+                          _billingName = nameController.text.trim();
+                          _billingNIT = nitController.text.trim();
+                        });
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Datos guardados correctamente',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: Colors.green,
+                            behavior: SnackBarBehavior.floating,
+                            duration: const Duration(seconds: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.check_rounded, size: 20),
+                      label: const Text(
+                        'Guardar',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryRed,
+                        foregroundColor: AppColors.backgroundWhite,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
+            ],
+          ),
+        ),
       ),
     );
   }
