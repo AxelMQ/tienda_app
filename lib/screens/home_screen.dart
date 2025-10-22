@@ -36,16 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _showSnackBar('✓ $productName agregado al carrito');
   }
 
-  // Función para quitar un producto del carrito (para pruebas)
-  void _removeFromCart() {
-    if (_cartItemCount > 0) {
-      setState(() {
-        _cartItemCount--;
-      });
-      _showSnackBar('Producto eliminado del carrito');
-    }
-  }
-
   // Categorías con imágenes PNG personalizadas
   final List<Map<String, dynamic>> _categories = [
     {
@@ -262,28 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _handleBottomNavTap(index);
         },
       ),
-      // Botones flotantes para probar el contador del carrito
-      // Elimínalos cuando ya no los necesites
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Botón para agregar items (prueba la animación de rebote)
-          FloatingActionButton.small(
-            heroTag: 'add',
-            onPressed: () => _addToCart('Producto de prueba'),
-            backgroundColor: AppColors.primaryRed,
-            child: const Icon(Icons.add, color: AppColors.backgroundWhite),
-          ),
-          const SizedBox(height: 8),
-          // Botón para quitar items
-          FloatingActionButton.small(
-            heroTag: 'remove',
-            onPressed: _removeFromCart,
-            backgroundColor: AppColors.textLightGray,
-            child: const Icon(Icons.remove, color: AppColors.backgroundWhite),
-          ),
-        ],
-      ),
+      
     );
   }
 
